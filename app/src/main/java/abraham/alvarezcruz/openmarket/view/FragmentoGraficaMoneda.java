@@ -52,6 +52,7 @@ public class FragmentoGraficaMoneda extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         parent.setSupportActionBar(toolbar);
+        toolbar.setTitle("Otra toolbar");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
