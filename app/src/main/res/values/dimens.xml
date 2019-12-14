@@ -1,0 +1,38 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- detalle_moneda.xml -->
+    <dimen name="altura_framelayout_detalle_moneda">92dp</dimen>
+    <dimen name="margenes_laterales_relative_detalle_moneda">8dp</dimen>
+    <dimen name="margen_superior_relative_detalle_moneda">4dp</dimen>
+    <dimen name="margen_inferior_relative_detalle_moneda">4dp</dimen>
+    <dimen name="ancho_contenedor_datos_generales_detalle_moneda">145dp</dimen>
+    <dimen name="ancho_imagen_criptomoneda_detalle_moneda">48dp</dimen>
+    <dimen name="altura_imagen_criptomoneda_detalle_moneda">48dp</dimen>
+    <dimen name="margen_izquierdo_imagen_criptomoneda_detalle_moneda">12dp</dimen>
+    <dimen name="margenes_laterales_texto_nombre_criptomoneda_detalle_moneda">12dp</dimen>
+    <dimen name="tamanio_texto_nombre_criptomoneda_detalle_moneda">18sp</dimen>
+    <dimen name="tamanio_texto_precio_criptomoneda_detalle_moneda">14sp</dimen>
+    <dimen name="ancho_texto_precio_criptomoneda_detalle_moneda">120dp</dimen>
+    <dimen name="margen_superior_inferior_cambios_1h_24h_detalle_moneda">2dp</dimen>
+    <dimen name="tamanio_texto_cambios_1h_24h_detalle_moneda">12sp</dimen>
+    <dimen name="margen_derecho_cambios_1h_24h_detalle_moneda">8dp</dimen>
+
+    <!-- activity_detalles_con_grafica_moneda.xml -->
+    <dimen name="alto_grafica_moneda">216dp</dimen>
+    <dimen name="margenes_card_view_grafica_moneda">8dp</dimen>
+    <dimen name="margen_inferior_grafica_moneda">16dp</dimen>
+    <dimen name="tamanio_imagen_criptomoneda_grafica_moneda">56dp</dimen>
+    <dimen name="tamanio_texto_nombre_criptomoneda_grafica_moneda">24sp</dimen>
+    <dimen name="margen_superior_texto_nombre_criptomoneda_grafica_moneda">8dp</dimen>
+    <dimen name="margenes_exteriores_contenedores_datos_grafica_moneda">8dp</dimen>
+    <dimen name="margenes_interiores_contenedores_datos_grafica_moneda">6dp</dimen>
+    <dimen name="padding_lateral_contenedores_datos_grafica_moneda">6dp</dimen>
+    <dimen name="padding_superior_contenedores_datos_grafica_moneda">12dp</dimen>
+    <dimen name="margen_superior_entre_elementos_pequenio_grafica_moneda">6dp</dimen>
+    <dimen name="margen_superior_entre_elementos_grande_grafica_moneda">12dp</dimen>
+    <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
+    <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
+
+
+</resources>

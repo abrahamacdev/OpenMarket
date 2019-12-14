@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OpenMarket</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="sigla_hora">h</string>
+    <string name="sigla_dia">d</string>
+</resources>
