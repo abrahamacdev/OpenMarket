@@ -7,9 +7,5 @@ import io.reactivex.rxjava3.core.Maybe;
 
 public interface RepositorioRemoto {
 
-    public Maybe<ArrayList<Moneda>> obtenerDatosTodasCriptomonedas();
-
-    public Maybe<Moneda> obtenerDatosCriptomoneda(String idCriptomoneda);
-
-    public Maybe<ArrayList<String>> obtenerIdsTodasCriptomonedas();
+    public Maybe<ArrayList<Moneda>> obtenerDatosGeneralesTodasCriptomonedas(int pagina, int porPagina);
 }

@@ -1,6 +1,5 @@
 package abraham.alvarezcruz.openmarket.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,15 +16,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import org.reactivestreams.Processor;
-
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.ListadoMonedasAdapter;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemoto_Impl;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
@@ -73,7 +67,7 @@ public class FragmentoListaMonedas extends Fragment implements OnListadoMonedasL
 
         // Cargamos el listado de monedas
         RepositorioRemoto_Impl repositorioRemoto_Impl = new RepositorioRemoto_Impl(getContext());
-        repositorioRemoto_Impl.obtenerDatosTodasCriptomonedas()
+        repositorioRemoto_Impl.obtenerDatosGeneralesTodasCriptomonedas(1,250)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(listadoMonedas -> listadoMonedasAdapter.updateAll(listadoMonedas));
     }

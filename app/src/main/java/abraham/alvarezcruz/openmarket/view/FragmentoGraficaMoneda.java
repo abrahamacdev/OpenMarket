@@ -1,11 +1,14 @@
 package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +20,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
+import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemoto_Impl;
+import abraham.alvarezcruz.openmarket.utils.Utils;
+import io.reactivex.rxjava3.core.Maybe;
 
 public class FragmentoGraficaMoneda extends Fragment {
 
@@ -27,11 +36,15 @@ public class FragmentoGraficaMoneda extends Fragment {
 
     private View view;
     private AppCompatImageView imagenCriptomoneda;
-    private AppCompatTextView nombreCriptomoneda, precioActualUSD, precioActualBTC;
+    private AppCompatTextView nombreCriptomoneda, precioActualUSD;
     private AppCompatTextView textoCambio1h, textoCambio24h, textoCambio7d;
+    private AppCompatTextView textoMarketCap;
     private Toolbar toolbar;
     private Moneda moneda;
     private AppCompatActivity parent;
+    private RelativeLayout contenedorPrincipalGraficaMoneda;
+
+    private RepositorioRemoto_Impl repositorioRemoto_Impl;
 
     public FragmentoGraficaMoneda(Moneda moneda){
         this.moneda = moneda;
@@ -45,6 +58,8 @@ public class FragmentoGraficaMoneda extends Fragment {
 
         initViews();
 
+        cargarGrafica();
+
         return view;
     }
 
@@ -52,7 +67,7 @@ public class FragmentoGraficaMoneda extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         parent.setSupportActionBar(toolbar);
-        toolbar.setTitle("Otra toolbar");
+        toolbar.setTitle("");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,21 +78,23 @@ public class FragmentoGraficaMoneda extends Fragment {
             }
         });
 
+        contenedorPrincipalGraficaMoneda = view.findViewById(R.id.contenedorPrincipalGraficaMoneda);
+
         imagenCriptomoneda = view.findViewById(R.id.imagenMonedaGraficaMoneda);
-        Picasso.get().load(moneda.getUrlImagen()).into(imagenCriptomoneda);
+        imagenCriptomoneda.setImageBitmap(moneda.getImagen());
 
         nombreCriptomoneda = view.findViewById(R.id.textoNombreCriptomonedaGraficaMoneda);
         nombreCriptomoneda.setText(moneda.getNombre() + " (" + moneda.getAbreviatura() + ")");
 
         precioActualUSD = view.findViewById(R.id.precioActualUSDGraficaMoneda);
-        precioActualUSD.setText(String.format("%.8f", moneda.getPrecioActualUSD()));
-
-        precioActualBTC = view.findViewById(R.id.precioActualBTCGraficaMoneda);
-        precioActualBTC.setText(String.format("%.8f", moneda.getPrecioActualBTC()));
+        precioActualUSD.setText(Utils.eliminarNotacionCientificaString(moneda.getPrecioActualUSD()));
 
         textoCambio1h = view.findViewById(R.id.cambio1hGraficaMoneda);
         textoCambio24h = view.findViewById(R.id.cambio24hGraficaMoneda);
         textoCambio7d = view.findViewById(R.id.cambio7dGraficaMoneda);
+
+        textoMarketCap = view.findViewById(R.id.marketCapGraficaMoneda);
+        textoMarketCap.setText(Utils.eliminarNotacionCientificaString(moneda.getMarketCapTotal())  + "$");
 
         setearCambiosEnXPeriodo();
         colorSegunCambioXPeriodo();
@@ -153,6 +170,13 @@ public class FragmentoGraficaMoneda extends Fragment {
                 textoCambio7d.setTextColor(ContextCompat.getColor(getContext(), R.color.colorGreen));
             }
         }
+    }
+
+    private void cargarGrafica(){
+
+        repositorioRemoto_Impl = new RepositorioRemoto_Impl(getContext());
+
+
     }
 
     @Override

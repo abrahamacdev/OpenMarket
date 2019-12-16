@@ -4,4 +4,6 @@
 
     <string name="sigla_hora">h</string>
     <string name="sigla_dia">d</string>
+
+    <string name="market_cap">Market Cap</string>
 </resources>

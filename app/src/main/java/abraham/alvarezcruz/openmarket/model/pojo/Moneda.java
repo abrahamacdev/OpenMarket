@@ -1,20 +1,27 @@
 package abraham.alvarezcruz.openmarket.model.pojo;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
 
 public class Moneda {
 
     private String nombre, abreviatura, idNombreMoneda;
     private String urlImagen;
+    private Bitmap imagen;
     private double precioActualUSD, precioActualBTC;
     private double cambio1h;
     private double cambio24h;
     private double cambio7d;
+    private double marketCapTotal;
+    private ArrayList<Double> valoresUlt7D = new ArrayList<>();
 
     public Moneda(){}
 
-    public Moneda(String idNombreMoneda, String nombre, String abreviatura, double precioActualUSD, double precioActualBTC,
-                  double cambio1h, double cambio24h, double cambio7d, String urlImagen) {
+    public Moneda(String idNombreMoneda, String nombre, String abreviatura, double precioActualUSD,
+                  double cambio1h, double cambio24h, double cambio7d, double marketCapTotal, String urlImagen) {
 
         this.idNombreMoneda = idNombreMoneda;
         this.nombre = nombre;
@@ -25,6 +32,7 @@ public class Moneda {
         this.cambio24h = cambio24h;
         this.cambio7d = cambio7d;
         this.urlImagen = urlImagen;
+        this.marketCapTotal = marketCapTotal;
     }
 
     @NonNull
@@ -103,5 +111,29 @@ public class Moneda {
 
     public void setIdNombreMoneda(String idNombreMoneda) {
         this.idNombreMoneda = idNombreMoneda;
+    }
+
+    public double getMarketCapTotal() {
+        return marketCapTotal;
+    }
+
+    public void setMarketCapTotal(double marketCapTotal) {
+        this.marketCapTotal = marketCapTotal;
+    }
+
+    public ArrayList<Double> getValoresUlt7D() {
+        return valoresUlt7D;
+    }
+
+    public void setValoresUlt7D(ArrayList<Double> valoresUlt7D) {
+        this.valoresUlt7D = valoresUlt7D;
+    }
+
+    public Bitmap getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Bitmap imagen) {
+        this.imagen = imagen;
     }
 }

@@ -20,19 +20,20 @@
 
     <!-- activity_detalles_con_grafica_moneda.xml -->
     <dimen name="alto_grafica_moneda">216dp</dimen>
-    <dimen name="margenes_card_view_grafica_moneda">8dp</dimen>
-    <dimen name="margen_inferior_grafica_moneda">16dp</dimen>
     <dimen name="tamanio_imagen_criptomoneda_grafica_moneda">56dp</dimen>
     <dimen name="tamanio_texto_nombre_criptomoneda_grafica_moneda">24sp</dimen>
     <dimen name="margen_superior_texto_nombre_criptomoneda_grafica_moneda">8dp</dimen>
-    <dimen name="margenes_exteriores_contenedores_datos_grafica_moneda">8dp</dimen>
-    <dimen name="margenes_interiores_contenedores_datos_grafica_moneda">6dp</dimen>
+    <dimen name="margen_superior_imagen_criptomoneda_grafica_moneda">8dp</dimen>
+    <dimen name="margenes_exteriores_contenedores_datos_grafica_moneda">4dp</dimen>
+    <dimen name="margenes_interiores_contenedores_datos_grafica_moneda">4dp</dimen>
     <dimen name="padding_lateral_contenedores_datos_grafica_moneda">6dp</dimen>
-    <dimen name="padding_superior_contenedores_datos_grafica_moneda">12dp</dimen>
-    <dimen name="margen_superior_entre_elementos_pequenio_grafica_moneda">6dp</dimen>
-    <dimen name="margen_superior_entre_elementos_grande_grafica_moneda">12dp</dimen>
+    <dimen name="padding_superior_contenedores_datos_grafica_moneda">10dp</dimen>
+    <dimen name="margen_vertical_entre_elementos_pequenio_grafica_moneda">6dp</dimen>
+    <dimen name="margenes_verticales_volumen_marketcap_grafica_moneda">8dp</dimen>
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
+    <dimen name="margen_superior_labels_cambios_datos_grafica_moneda">8dp</dimen>
+    <dimen name="margen_inferior_labels_cambios_datos_grafica_moneda">4dp</dimen>
 
 
 </resources>

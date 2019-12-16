@@ -1,17 +1,23 @@
 package abraham.alvarezcruz.openmarket.model.repository;
 
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Constantes;
+import abraham.alvarezcruz.openmarket.utils.Utils;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.MaybeEmitter;
 import io.reactivex.rxjava3.core.MaybeOnSubscribe;
@@ -33,120 +39,129 @@ public class ParseadorRespuestasHTTP {
         return instance;
     }
 
+
+
     /**
      * Obtenemos todos los datos de una cierta criptomoneda del json (precio, nombre, urlImagen... etc)
      * @param json
      * @return Maybe<Moneda>
      */
-    public Maybe<Moneda> parsearTodosDatosCriptomoneda(final String json){
+    public Maybe<ArrayList<Moneda>> parsearDatosGeneralesDeTodasMonedas(final String json){
 
-        return Maybe.create(new MaybeOnSubscribe<Moneda>() {
+        return Maybe.create(new MaybeOnSubscribe<ArrayList<Moneda>>() {
             @Override
-            public void subscribe(MaybeEmitter<Moneda> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Moneda>> emitter) throws Throwable {
+
+                ArrayList<Moneda> monedas = new ArrayList<>();
+
                 try {
 
-                    Log.e(TAG_NAME,"Vamos a parsear los datos de la moneda");
-
                     // Elemento raíz
-                    JSONObject raiz = new JSONObject(json);
+                    JSONArray raiz = new JSONArray(json);
 
-                    // Nombree completo y abreviado
-                    String idNombreMoneda = raiz.getString("id");
-                    String nombreCompleto = raiz.getString("name");
-                    String nombreAbreviado = raiz.getString("symbol");
+                    for (int i=0; i<raiz.length(); i++){
 
-                    // URL de la imagen
-                    JSONObject image = raiz.getJSONObject("image");
-                    String urlImagen = image.getString("large");
+                        JSONObject datosMoneda = raiz.getJSONObject(i);
 
-                    // Precio actual en USD y en Bitcoins de la criptomoneda
-                    JSONObject datos_mercado = raiz.getJSONObject("market_data");
-                    JSONObject precios_actuales = datos_mercado.getJSONObject("current_price");
-                    double precioActualUSD = precios_actuales.getDouble("usd");
-                    double precioActualBTC = precios_actuales.getDouble("btc");
+                        // Nombree completo y abreviado
+                        String idNombreMoneda = datosMoneda.getString("id");
+                        String nombreCompleto = datosMoneda.getString("name");
+                        String nombreAbreviado = datosMoneda.getString("symbol");
 
-                    // Cambios en los precios de 1h, 24h y 7d
-                    double tempPorcenCambio7d = datos_mercado.getDouble("price_change_percentage_7d");
-                    String tempPorcenCambio7dString = df.format(tempPorcenCambio7d).replaceAll(",",".");
-                    double porcenCambio7d = Double.valueOf(tempPorcenCambio7dString);
-                    if (porcenCambio7d== 0.0){
-                        porcenCambio7d = Double.NaN;
+                        // URL de la imagen
+                        String urlImagen = datosMoneda.getString("image");
+
+                        // Precio actual en USD y en Bitcoins de la criptomoneda
+                        double precioActualUSD = datosMoneda.getDouble("current_price");
+
+                        // Market cap de la criptomoneda en usd
+                        double marketCapUSD = datosMoneda.getDouble("market_cap");
+                        marketCapUSD = Utils.eliminarNotacionCientificaDouble(marketCapUSD);
+
+                        // Cambios en los precios de 1h, 24h y 7d
+                        double porcenCambio7d = datosMoneda.optDouble("price_change_percentage_7d_in_currency", -1);
+                        porcenCambio7d = Utils.eliminarNotacionCientificaDouble(porcenCambio7d);
+
+                        double porcenCambio24h = datosMoneda.optDouble("price_change_percentage_24h_in_currency", -1);
+                        porcenCambio24h = Utils.eliminarNotacionCientificaDouble(porcenCambio24h);
+
+                        double porcenCambio1h = datosMoneda.optDouble("price_change_percentage_1h_in_currency", -1);
+                        porcenCambio1h = Utils.eliminarNotacionCientificaDouble(porcenCambio1h);
+
+                        // Creamos la moneda
+                        Moneda moneda = new Moneda(idNombreMoneda, nombreCompleto, nombreAbreviado, precioActualUSD,
+                                porcenCambio1h, porcenCambio24h, porcenCambio7d, marketCapUSD, urlImagen);
+
+                        // Añadimos la moneda a la lista
+                        monedas.add(moneda);
                     }
-
-                    double tempPorcenCambio24h = datos_mercado.getDouble("price_change_percentage_24h");
-                    String tempPorcenCambio24hString = df.format(tempPorcenCambio24h).replaceAll(",",".");
-                    double porcenCambio24h = Double.valueOf(tempPorcenCambio24hString);
-                    if (porcenCambio24h == 0.0){
-                        porcenCambio24h = Double.NaN;
-                    }
-
-                    JSONObject porcenCambio1hObject = datos_mercado.getJSONObject("price_change_percentage_1h_in_currency");
-                    Log.e(TAG_NAME, "(" + nombreCompleto + ") " + porcenCambio1hObject.toString());
-                    double porcenCambio1h = Double.NaN;
-                    if (porcenCambio1hObject.length() > 0){
-                        // Obtención del porcentaje
-                        double tempPorcenCambio1h = porcenCambio1hObject.getDouble("btc");
-                        String tempPorcenCambio1hString = df.format(tempPorcenCambio1h).replaceAll(",",".");
-                        tempPorcenCambio1h = Double.valueOf(tempPorcenCambio1hString);
-
-                        if (tempPorcenCambio1h > 0.0){
-                            porcenCambio1h = tempPorcenCambio1h;
-                        }
-                    }
-
-                    // Creamos la moneda
-                    Moneda moneda = new Moneda(idNombreMoneda, nombreCompleto, nombreAbreviado, precioActualUSD, precioActualBTC,
-                            porcenCambio1h, porcenCambio24h, porcenCambio7d, urlImagen);
-
-                    // La emitimos
-                    emitter.onSuccess(moneda);
-
                 } catch (JSONException e) {
                     emitter.onError(e);
                 }
+
+                // La emitimos
+                emitter.onSuccess(monedas);
             }
         });
     }
 
     /**
-     * Extraemos los ids de todas las criptomonedas del json
+     * Obtenemos los precios de cotización de la moneda en los últimos x días
+     *
      * @param json
-     * @return Maybe<ArrayList<String>>
+     * @param dias
+     * @return Maybe<Moneda>
      */
-    public Maybe<ArrayList<String>> parsearIdsTodasCriptomonedas(final String json){
-
-        return Maybe.create(new MaybeOnSubscribe<ArrayList<String>>() {
+    public Maybe<ArrayList<Double>> parsearPreciosCotizacionDeUnaMoneda(final String json, final int dias){
+        return Maybe.create(new MaybeOnSubscribe<ArrayList<Double>>() {
             @Override
-            public void subscribe(MaybeEmitter<ArrayList<String>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Double>> emitter){
 
                 try {
-                    JSONArray raiz = new JSONArray(json);
+                    JSONObject raiz = new JSONObject(json);
+                    JSONArray preciosArray = raiz.getJSONArray("prices");
 
-                    ArrayList<String> listadoIds = new ArrayList<>();
+                    ArrayList<Double> preciosCotizacion = new ArrayList<>();
 
-                    // TODO Evitamos abusar de la API
-                    int size = Constantes.NUM_MAX_CRIPTOMONEDAS == -1 ? raiz.length() : Constantes.NUM_MAX_CRIPTOMONEDAS;
+                    LocalDate hoy = LocalDate.now();
+                    LocalDate hace7dias = LocalDate.now().minusDays(7);
 
-                    // Recorremos cada conjunto de datos, extraemos el id de la moneda y lo añadimos
-                    // al listado
-                    for (int i=0; i<size; i++){
+                    // Comprobamos que halla suficientes días
+                    if (preciosArray.length() >= dias){
 
-                        JSONObject conjunto = raiz.getJSONObject(i);
-                        String id = conjunto.getString("id");
-                        listadoIds.add(id);
+                        int diasRestantes = dias;
+                        for (int i=preciosArray.length() - 1; i>=0; i--){
+
+                            JSONArray datosPrecio = preciosArray.getJSONArray(i);
+                            long millis = datosPrecio.getLong(0);
+                            double precio = datosPrecio.getDouble(1);
+                            LocalDate fechaDelPrecio = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
+
+                            // Hemos recolectado los precios necesarios
+                            if (diasRestantes == 0){
+                                break;
+                            }
+
+                            // La fecha no cumple con los mínimos
+                            if (!Utils.fechaEntreRango(hace7dias, hoy, fechaDelPrecio)){
+                                preciosCotizacion.clear();
+                                break;
+                            }
+
+                            // Añadimos cada precio a la lista
+                            preciosCotizacion.add(precio);
+
+                            diasRestantes--;
+                        }
                     }
 
-                    Log.e(TAG_NAME,"Se han obtenido los ids de todas las criptomonedas, hay " + listadoIds.size()
-                    + " en total");
-
-                    // Emitimos el listado
-                    emitter.onSuccess(listadoIds);
-                }catch (JSONException e){
-                    emitter.onError(e);
+                    // Emitimos la lista con los precios de cotización de la moneda
+                    emitter.onSuccess(preciosCotizacion);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
     }
-
 
 }

@@ -1,10 +1,15 @@
 package abraham.alvarezcruz.openmarket.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -13,11 +18,13 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
+import abraham.alvarezcruz.openmarket.utils.Utils;
 import abraham.alvarezcruz.openmarket.view.OnListadoMonedasListener;
 
 public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAdapter.ListadoMonedasVH> {
@@ -117,20 +124,31 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
             Log.e(TAG_NAME, "La imagen apunta a " + moneda.getUrlImagen());
 
             // Cargamos la imagen de la moneda
-            Picasso.get().load(moneda.getUrlImagen()).into(imagenCriptoMoneda);
+            Picasso.get().load(moneda.getUrlImagen()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    moneda.setImagen(bitmap);
+                    imagenCriptoMoneda.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {}
+            });
 
             // Evitamos la notación científica
-            String precio = String.format("%.8f",moneda.getPrecioActualUSD()) + "$";
+            String precio = Utils.eliminarNotacionCientificaDouble(moneda.getPrecioActualUSD()) + "$";
 
             // Cargamos los demás datos de la moneda
-            nombreCriptomoneda.setText(moneda.getNombre());
+            nombreCriptomoneda.setText(moneda.getAbreviatura().toUpperCase());
             precioCriptomoneda.setText(precio);
 
             // Cambioo 24h
             double cambio24h = moneda.getCambio24h();
             if (Double.isNaN(cambio24h)){
                 porcentajeCambio24h.setText("-");
-                porcentajeCambio24h.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             } else {
                 porcentajeCambio24h.setText(String.valueOf(moneda.getCambio24h()) + "% (24" + context.getString(R.string.sigla_hora) + ")");
             }
@@ -139,7 +157,6 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
             double cambio1h = moneda.getCambio1h();
             if (Double.isNaN(cambio1h)){
                 porcentajeCambio1h.setText("-");
-                porcentajeCambio1h.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             } else {
                 porcentajeCambio1h.setText(String.valueOf(moneda.getCambio1h()) + "% (1" + context.getString(R.string.sigla_hora) + ")");
             }
@@ -190,6 +207,18 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
             if (onListadoMonedasListener != null){
                 onListadoMonedasListener.onMonedaClicked(moneda);
             }
+        }
+
+        private int numeroDeLineasOcupadas(TextView textView){
+
+            String texto = String.valueOf(textView.getText());
+
+            final Rect bounds = new Rect();
+            final Paint paint = new Paint();
+            paint.setTextSize(textView.getTextSize());
+            paint.getTextBounds(texto, 0, texto.length(), bounds);
+
+            return (int) Math.ceil((float) bounds.width() / textView.getTextSize());
         }
     }
 }

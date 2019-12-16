@@ -28,14 +28,14 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textoNombreCriptomoneda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margenes_laterales_texto_nombre_criptomoneda_detalle_moneda"
-                android:layout_marginRight="@dimen/margenes_laterales_texto_nombre_criptomoneda_detalle_moneda"
                 android:layout_toRightOf="@id/imagenCriptomoneda"
                 android:text="Bitcoin"
-                android:textAlignment="textStart"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/tamanio_texto_nombre_criptomoneda_detalle_moneda" />
 
@@ -66,11 +66,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/separadorCambiosCriptomoneda"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margen_derecho_cambios_1h_24h_detalle_moneda"
                     android:layout_marginBottom="@dimen/margen_superior_inferior_cambios_1h_24h_detalle_moneda"
                     android:text="-3,5% (1hr)"
-                    android:textAlignment="textEnd"
+                    android:textAlignment="center"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/tamanio_texto_cambios_1h_24h_detalle_moneda" />
 
@@ -85,11 +84,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/separadorCambiosCriptomoneda"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/margen_superior_inferior_cambios_1h_24h_detalle_moneda"
                     android:layout_marginRight="@dimen/margen_derecho_cambios_1h_24h_detalle_moneda"
                     android:text="+45,23% (24hr)"
-                    android:textAlignment="textEnd"
+                    android:textAlignment="center"
                     android:textColor="@color/colorGreen"
                     android:textSize="@dimen/tamanio_texto_cambios_1h_24h_detalle_moneda" />
 

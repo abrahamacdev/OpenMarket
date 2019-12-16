@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         view = findViewById(R.id.root);
 
+        // TODO Necesario para poder trabajar con fechas
+        AndroidThreeTen.init(this);
+
         FragmentoListaMonedas fragmentoListaMoneda = new FragmentoListaMonedas();
         escucharMonedaClickada(fragmentoListaMoneda.getMonedaClickeadaSubject());
 
@@ -44,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         monedaPublishSubject.subscribe(moneda -> {
 
-            // TODO Implementar que hacer cuando clickeen la moneda
-            //Snackbar.make(view, "Se ha clickedo la moneda " + moneda.getNombre(), Snackbar.LENGTH_SHORT).show();
             mostrarDatosConGrafica(moneda);
 
         }, error -> {
