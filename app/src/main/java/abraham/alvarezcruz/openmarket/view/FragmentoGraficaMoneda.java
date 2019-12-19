@@ -1,14 +1,15 @@
 package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,16 +20,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
+import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemoto_Impl;
+import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemotoImpl;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FragmentoGraficaMoneda extends Fragment {
 
@@ -36,15 +48,18 @@ public class FragmentoGraficaMoneda extends Fragment {
 
     private View view;
     private AppCompatImageView imagenCriptomoneda;
-    private AppCompatTextView nombreCriptomoneda, precioActualUSD;
+    private AppCompatTextView textoNombreCriptomoneda, textoPrecioActualUSD;
     private AppCompatTextView textoCambio1h, textoCambio24h, textoCambio7d;
-    private AppCompatTextView textoMarketCap;
+    private LottieAnimationView animacion;
+    private AppCompatTextView textoMarketCap, textoVolumen;
     private Toolbar toolbar;
     private Moneda moneda;
     private AppCompatActivity parent;
-    private RelativeLayout contenedorPrincipalGraficaMoneda;
+    private Context context;
+    private LineChart grafica;
+    private LinearLayout contenedorPrincipalGraficaMoneda;
 
-    private RepositorioRemoto_Impl repositorioRemoto_Impl;
+    private RepositorioRemotoImpl repositorioRemoto_Impl;
 
     public FragmentoGraficaMoneda(Moneda moneda){
         this.moneda = moneda;
@@ -55,9 +70,12 @@ public class FragmentoGraficaMoneda extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.activity_detalles_con_grafica_moneda, container, false);
+        context = container.getContext();
 
+        // Inicializamos las vistas
         initViews();
 
+        // Cargamos el reycler view
         cargarGrafica();
 
         return view;
@@ -72,29 +90,40 @@ public class FragmentoGraficaMoneda extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG_NAME, "Nos pirámos!!");
                 // Manejamos nosotros mismos la salida
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
+        grafica = view.findViewById(R.id.grafica);
+        animacion = view.findViewById(R.id.animacion_bitcoin);
+        animacion.setMaxFrame(120);
+
         contenedorPrincipalGraficaMoneda = view.findViewById(R.id.contenedorPrincipalGraficaMoneda);
 
         imagenCriptomoneda = view.findViewById(R.id.imagenMonedaGraficaMoneda);
-        imagenCriptomoneda.setImageBitmap(moneda.getImagen());
+        Picasso.get()
+                .load(moneda.getUrlImagen())
+                .into(imagenCriptomoneda);
 
-        nombreCriptomoneda = view.findViewById(R.id.textoNombreCriptomonedaGraficaMoneda);
-        nombreCriptomoneda.setText(moneda.getNombre() + " (" + moneda.getAbreviatura() + ")");
+        textoNombreCriptomoneda = view.findViewById(R.id.textoNombreCriptomonedaGraficaMoneda);
+        textoNombreCriptomoneda.setText(moneda.getNombre() + " (" + moneda.getAbreviatura() + ")");
 
-        precioActualUSD = view.findViewById(R.id.precioActualUSDGraficaMoneda);
-        precioActualUSD.setText(Utils.eliminarNotacionCientificaString(moneda.getPrecioActualUSD()));
+        textoPrecioActualUSD = view.findViewById(R.id.precioActualUSDGraficaMoneda);
+        String precioActualUSD = Utils.eliminarNotacionCientificaString(moneda.getPrecioActualUSD());
+        textoPrecioActualUSD.setText(precioActualUSD.replace(".", ","));
 
         textoCambio1h = view.findViewById(R.id.cambio1hGraficaMoneda);
         textoCambio24h = view.findViewById(R.id.cambio24hGraficaMoneda);
         textoCambio7d = view.findViewById(R.id.cambio7dGraficaMoneda);
 
         textoMarketCap = view.findViewById(R.id.marketCapGraficaMoneda);
-        textoMarketCap.setText(Utils.eliminarNotacionCientificaString(moneda.getMarketCapTotal())  + "$");
+        String marketCapConSeparadorDeCientos = Utils.anadirSeparadorDeCientosANumero(moneda.getMarketCapTotal());
+        textoMarketCap.setText(marketCapConSeparadorDeCientos + "$");
+
+        textoVolumen = view.findViewById(R.id.volumen24hGraficaMoneda);
+        String volumenConSeparadorDeCientos = Utils.anadirSeparadorDeCientosANumero(moneda.getVolumenTotal());
+        textoVolumen.setText(volumenConSeparadorDeCientos + "$");
 
         setearCambiosEnXPeriodo();
         colorSegunCambioXPeriodo();
@@ -172,10 +201,146 @@ public class FragmentoGraficaMoneda extends Fragment {
         }
     }
 
+    private void esconderAnimacion(){
+        if (animacion.getVisibility() == View.VISIBLE){
+            animacion.setVisibility(View.GONE);
+            animacion.cancelAnimation();
+            animacion.clearAnimation();
+        }
+    }
+
     private void cargarGrafica(){
 
-        repositorioRemoto_Impl = new RepositorioRemoto_Impl(getContext());
+        if (moneda.getValoresUlt8D().size() == 0){
+            repositorioRemoto_Impl = new RepositorioRemotoImpl(getContext());
+            repositorioRemoto_Impl.obtenerPreciosUlt8DiasDe(moneda.getIdNombreMoneda())
+                    .subscribeOn(Schedulers.computation())
+                    .subscribe(preciosMoneda -> {
+                        moneda.setValoresUlt8D(preciosMoneda);
+                        Log.e(TAG_NAME, "Hemos recibido " + moneda.getValoresUlt8D().size() + " valores");
+                        anadirDatosAGrafica();
+                    });
+        }
 
+        else {
+            anadirDatosAGrafica();
+        }
+    }
+
+    private void anadirDatosAGrafica(){
+
+        grafica.setPinchZoom(false);
+        grafica.setScaleEnabled(false);
+
+        LocalDate[] ultimos8dias = Utils.obtenerListaDeUltimos(8);
+
+        ArrayList<Double> valores = moneda.getValoresUlt8D();
+        ArrayList<Entry> puntos = new ArrayList<>();
+
+        // Creamos los puntos de la gráfica
+        int j = 0;
+        for (int i = valores.size() - 1; i>=0; i--){
+            double precio = valores.get(i);
+
+            puntos.add(new Entry(j, (float) precio));
+            j++;
+        }
+
+        int colorBlanco = ContextCompat.getColor(context, android.R.color.white);
+        int colorLineaPrecios = ContextCompat.getColor(context, R.color.lineaPreciosGrafica);
+
+        // Legenda del eje x
+        XAxis xAxis = grafica.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1);
+        xAxis.setTextColor(colorBlanco);
+        xAxis.setValueFormatter(new ValueFormatter() {
+
+            private boolean mostrado = false;
+
+            @Override
+            public String getAxisLabel(float value, AxisBase axis) {
+
+                if (value == 0.0 || mostrado){
+                    mostrado = false;
+                    return "";
+                }
+
+                LocalDate localDate = ultimos8dias[ultimos8dias.length - 1 - (int) value];
+                mostrado = true;
+                return  localDate.getDayOfMonth() + "/" + localDate.getMonthValue();
+            }
+        });
+
+        // Legenda del eje "y" derecho
+        YAxis yAxisRight = grafica.getAxisRight();
+        yAxisRight.setEnabled(false);
+        yAxisRight.setDrawGridLines(false);
+
+        // Legenda del eje "y" izquierdo
+        YAxis yAxisLeft = grafica.getAxisLeft();
+        yAxisLeft.setEnabled(true);
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setTextColor(colorBlanco);
+        yAxisLeft.setAxisLineColor(ContextCompat.getColor(context, android.R.color.transparent));
+
+        grafica.getLegend().setEnabled(false);
+        grafica.getDescription().setText("");
+        grafica.setViewPortOffsets(110,30,80,50);
+        grafica.setHighlightPerTapEnabled(false);
+        grafica.setHighlightPerDragEnabled(false);
+
+        LineDataSet lineDataSet = new LineDataSet(puntos, null);
+        lineDataSet.setDrawFilled(true);
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.degradado_sombra_grafica_precio_moneda);
+        lineDataSet.setFillDrawable(drawable);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextColor(colorBlanco);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setColor(colorLineaPrecios);
+        lineDataSet.setCircleColor(colorLineaPrecios);
+        lineDataSet.setValueTextSize(8);
+        lineDataSet.setCircleHoleColor(colorLineaPrecios);
+
+        final float primerValorDeLaGrafica = (float) ((double)valores.get(valores.size() - 1));
+        lineDataSet.setValueFormatter(new ValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value) {
+
+                if (value == primerValorDeLaGrafica){
+                    return "";
+                }
+
+                String valor = Utils.eliminarNotacionCientificaString(value,2,6);
+                return valor.replace(".",",");
+            }
+        });
+
+        // Añadimos los datos a la gráfica
+        LineData data = new LineData(lineDataSet);
+        grafica.setData(data);
+        grafica.invalidate();
+        // Escondemos la animación de carga y mostramos la gráfica
+        esconderAnimacion();
+
+        AlphaAnimation fadeIn = new AlphaAnimation(0f,1f);
+        fadeIn.setDuration(1000);
+        fadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                grafica.setVisibility(View.VISIBLE);
+                grafica.animateY(1500, Easing.EaseInOutCirc);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        grafica.setAnimation(fadeIn);
 
     }
 

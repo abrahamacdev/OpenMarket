@@ -1,5 +1,10 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- activity_listado_monedas.xml -->
+    <dimen name="altura_fab">56dp</dimen>
+    <dimen name="anchura_fab">56dp</dimen>
+    <dimen name="margenes_fab">16dp</dimen>
+
 
     <!-- detalle_moneda.xml -->
     <dimen name="altura_framelayout_detalle_moneda">92dp</dimen>
@@ -28,12 +33,7 @@
     <dimen name="margenes_interiores_contenedores_datos_grafica_moneda">4dp</dimen>
     <dimen name="padding_lateral_contenedores_datos_grafica_moneda">6dp</dimen>
     <dimen name="padding_superior_contenedores_datos_grafica_moneda">10dp</dimen>
-    <dimen name="margen_vertical_entre_elementos_pequenio_grafica_moneda">6dp</dimen>
-    <dimen name="margenes_verticales_volumen_marketcap_grafica_moneda">8dp</dimen>
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
-    <dimen name="margen_superior_labels_cambios_datos_grafica_moneda">8dp</dimen>
-    <dimen name="margen_inferior_labels_cambios_datos_grafica_moneda">4dp</dimen>
-
 
 </resources>

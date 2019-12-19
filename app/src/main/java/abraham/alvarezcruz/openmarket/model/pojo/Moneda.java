@@ -15,13 +15,13 @@ public class Moneda {
     private double cambio1h;
     private double cambio24h;
     private double cambio7d;
-    private double marketCapTotal;
-    private ArrayList<Double> valoresUlt7D = new ArrayList<>();
+    private double marketCapTotal, volumenTotal;
+    private ArrayList<Double> valoresUlt8D = new ArrayList<>();
 
     public Moneda(){}
 
     public Moneda(String idNombreMoneda, String nombre, String abreviatura, double precioActualUSD,
-                  double cambio1h, double cambio24h, double cambio7d, double marketCapTotal, String urlImagen) {
+                  double cambio1h, double cambio24h, double cambio7d, double marketCapTotal, double volumenTotal, String urlImagen) {
 
         this.idNombreMoneda = idNombreMoneda;
         this.nombre = nombre;
@@ -33,6 +33,7 @@ public class Moneda {
         this.cambio7d = cambio7d;
         this.urlImagen = urlImagen;
         this.marketCapTotal = marketCapTotal;
+        this.volumenTotal = volumenTotal;
     }
 
     @NonNull
@@ -121,12 +122,12 @@ public class Moneda {
         this.marketCapTotal = marketCapTotal;
     }
 
-    public ArrayList<Double> getValoresUlt7D() {
-        return valoresUlt7D;
+    public ArrayList<Double> getValoresUlt8D() {
+        return valoresUlt8D;
     }
 
-    public void setValoresUlt7D(ArrayList<Double> valoresUlt7D) {
-        this.valoresUlt7D = valoresUlt7D;
+    public void setValoresUlt8D(ArrayList<Double> valoresUlt8D) {
+        this.valoresUlt8D = valoresUlt8D;
     }
 
     public Bitmap getImagen() {
@@ -135,5 +136,13 @@ public class Moneda {
 
     public void setImagen(Bitmap imagen) {
         this.imagen = imagen;
+    }
+
+    public double getVolumenTotal() {
+        return volumenTotal;
+    }
+
+    public void setVolumenTotal(double volumenTotal) {
+        this.volumenTotal = volumenTotal;
     }
 }

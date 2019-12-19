@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         layout="@layout/toolbar"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerListaMonedas"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryLessDark"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerListaMonedas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryLessDark"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabExchanges"
+            android:layout_width="@dimen/altura_fab"
+            android:layout_height="@dimen/anchura_fab"
+            android:layout_margin="@dimen/margenes_fab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            app:borderWidth="0dp"
+            android:backgroundTint="@color/colorPrimaryLight"
+            android:src="@drawable/ic_exchange"
+            app:maxImageSize="28dp"
+            app:fabSize="normal"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

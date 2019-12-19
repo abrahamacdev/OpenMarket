@@ -46,4 +46,12 @@ dependencies {
     // Fechas
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+
+    // MPAndroidChart
+    compile group: 'com.github.PhilJay', name: 'MPAndroidChart', version: 'v3.1.0'
+
+    // Lottie
+    compile group: 'com.airbnb.android', name: 'lottie', version: '3.3.0'
 }

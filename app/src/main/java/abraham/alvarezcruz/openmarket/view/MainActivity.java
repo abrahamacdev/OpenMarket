@@ -3,25 +3,22 @@ package abraham.alvarezcruz.openmarket.view;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static String TAG_NAME = MainActivity.class.getSimpleName();
 
     private View view;
     private FragmentManager fragmentManager = getSupportFragmentManager();
@@ -33,37 +30,73 @@ public class MainActivity extends AppCompatActivity {
 
         view = findViewById(R.id.root);
 
-        // TODO Necesario para poder trabajar con fechas
+        // TODO Necesario para poder utilizar ciertas librerías
         AndroidThreeTen.init(this);
 
         FragmentoListaMonedas fragmentoListaMoneda = new FragmentoListaMonedas();
         escucharMonedaClickada(fragmentoListaMoneda.getMonedaClickeadaSubject());
+        escucharAperturaExchanges(fragmentoListaMoneda.getFabAperturaExchangesSubject());
 
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaMoneda)
                 .commit();
     }
 
+
+
+    /**
+     * Cada vez que una moneda del {@link FragmentoListaMonedas} sea clickeada, recibiremos un evento
+     * para ver en detalle más datos sobre la moneda
+     * @param monedaPublishSubject
+     */
     private void escucharMonedaClickada(PublishSubject<Moneda> monedaPublishSubject){
 
         monedaPublishSubject.subscribe(moneda -> {
 
-            mostrarDatosConGrafica(moneda);
+            mostrarFragmentoDetalleMoneda(moneda);
 
         }, error -> {
             error.printStackTrace();
         });
     }
 
-    private void mostrarDatosConGrafica(Moneda moneda){
+    /**
+     * Cada vez que se clickee el fab button de {@link FragmentoListaMonedas}, recibiremos un evento
+     * para mostrar todos los exchanges disponibles
+     */
+    private void escucharAperturaExchanges(Observable<View> fabExchangesObservable){
+        fabExchangesObservable.subscribe(
+                view -> {
+
+                    mostrarFragmentoExchanges();
+                },
+                error -> {
+                    error.printStackTrace();
+                });
+
+    }
+
+
+
+    private void mostrarFragmentoDetalleMoneda(Moneda moneda){
 
         FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda);
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoGraficaMoneda, FragmentoGraficaMoneda.TAG_NAME)
                 .addToBackStack(FragmentoGraficaMoneda.TAG_NAME)
                 .commit();
-
     }
+
+    private void mostrarFragmentoExchanges(){
+
+        //FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda);
+        fragmentManager.beginTransaction()
+                //.replace(R.id.contenedorFragmentos, fragmentoGraficaMoneda, FragmentoGraficaMoneda.TAG_NAME)
+                //.addToBackStack(FragmentoGraficaMoneda.TAG_NAME)
+                .commit();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

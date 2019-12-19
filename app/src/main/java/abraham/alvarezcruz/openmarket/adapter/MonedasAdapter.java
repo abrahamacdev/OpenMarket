@@ -1,11 +1,8 @@
 package abraham.alvarezcruz.openmarket.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,33 +15,32 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import abraham.alvarezcruz.openmarket.view.OnListadoMonedasListener;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
-public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAdapter.ListadoMonedasVH> {
+public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoMonedasVH> {
 
-    private static String TAG_NAME = ListadoMonedasAdapter.class.getSimpleName();
+    private static String TAG_NAME = MonedasAdapter.class.getSimpleName();
 
     private ArrayList<Moneda> listadoMonedas;
-    private OnListadoMonedasListener onListadoMonedasListener;
+    private PublishSubject<Moneda> onMonedaClickeadaSubject;
 
-    public ListadoMonedasAdapter(){
+    public MonedasAdapter(){
         this(new ArrayList<>(), null);
     }
 
-    public ListadoMonedasAdapter(ArrayList<Moneda> listadoMonedas) {
+    public MonedasAdapter(ArrayList<Moneda> listadoMonedas) {
         this(listadoMonedas, null);
     }
 
-    public ListadoMonedasAdapter(ArrayList<Moneda> listadoMonedas, OnListadoMonedasListener onListadoMonedasListener) {
+    public MonedasAdapter(ArrayList<Moneda> listadoMonedas, PublishSubject<Moneda> onMonedaClickeadaSubject) {
         this.listadoMonedas = listadoMonedas;
-        this.onListadoMonedasListener = onListadoMonedasListener;
+        this.onMonedaClickeadaSubject = onMonedaClickeadaSubject;
     }
 
     @NonNull
@@ -62,7 +58,7 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
     public void onBindViewHolder(@NonNull ListadoMonedasVH holder, int position) {
 
         Moneda moneda = listadoMonedas.get(position);
-        holder.setOnListadoMonedasListener(onListadoMonedasListener);
+        holder.setOnMonedaClickeadaSubject(onMonedaClickeadaSubject);
         holder.bind(listadoMonedas.get(position));
     }
 
@@ -81,8 +77,6 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
 
     public void updateAll(ArrayList<Moneda> listadoMonedas){
 
-        Log.e(TAG_NAME,"Vamos a actualizar todos los datos de la lista con " + listadoMonedas.size() + " nuevos");
-
         if (listadoMonedas != null && listadoMonedas.size() > 0){
             this.listadoMonedas.clear();
             this.listadoMonedas.addAll(listadoMonedas);
@@ -90,16 +84,18 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
         }
     }
 
-    public void setOnListadoMonedasListener(OnListadoMonedasListener onListadoMonedasListener) {
-        this.onListadoMonedasListener = onListadoMonedasListener;
+    public void setOnMonedaClickeadaSubject(PublishSubject<Moneda> onMonedaClickeadaSubject) {
+        this.onMonedaClickeadaSubject = onMonedaClickeadaSubject;
     }
+
+
 
     public class ListadoMonedasVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private View view;
         private AppCompatImageView imagenCriptoMoneda;
         private AppCompatTextView nombreCriptomoneda, precioCriptomoneda, porcentajeCambio1h, porcentajeCambio24h;
-        private OnListadoMonedasListener onListadoMonedasListener;
+        private PublishSubject<Moneda> onMonedaClickeadaSubject;
         private Moneda moneda;
         private Context context;
 
@@ -121,25 +117,13 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
 
             this.moneda = moneda;
 
-            Log.e(TAG_NAME, "La imagen apunta a " + moneda.getUrlImagen());
-
             // Cargamos la imagen de la moneda
-            Picasso.get().load(moneda.getUrlImagen()).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    moneda.setImagen(bitmap);
-                    imagenCriptoMoneda.setImageBitmap(bitmap);
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {}
-            });
+            Picasso.get()
+                    .load(moneda.getUrlImagen())
+                    .into(imagenCriptoMoneda);
 
             // Evitamos la notación científica
-            String precio = Utils.eliminarNotacionCientificaDouble(moneda.getPrecioActualUSD()) + "$";
+            String precio = Utils.eliminarNotacionCientificaString(moneda.getPrecioActualUSD()) + "$";
 
             // Cargamos los demás datos de la moneda
             nombreCriptomoneda.setText(moneda.getAbreviatura().toUpperCase());
@@ -166,8 +150,8 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
 
         }
 
-        public void setOnListadoMonedasListener(OnListadoMonedasListener onListadoMonedasListener) {
-            this.onListadoMonedasListener = onListadoMonedasListener;
+        public void setOnMonedaClickeadaSubject(PublishSubject<Moneda> onMonedaClickeadaSubject) {
+            this.onMonedaClickeadaSubject = onMonedaClickeadaSubject;
         }
 
         private void determinarColorPorcentajesCambio(){
@@ -204,8 +188,8 @@ public class ListadoMonedasAdapter extends RecyclerView.Adapter<ListadoMonedasAd
 
         @Override
         public void onClick(View v) {
-            if (onListadoMonedasListener != null){
-                onListadoMonedasListener.onMonedaClicked(moneda);
+            if (onMonedaClickeadaSubject != null){
+                onMonedaClickeadaSubject.onNext(moneda);
             }
         }
 

@@ -10,13 +10,12 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import abraham.alvarezcruz.openmarket.utils.Constantes;
 import abraham.alvarezcruz.openmarket.utils.Utils;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.MaybeEmitter;
@@ -26,9 +25,6 @@ public class ParseadorRespuestasHTTP {
 
     private static String TAG_NAME = ParseadorRespuestasHTTP.class.getSimpleName();
     private static ParseadorRespuestasHTTP instance = null;
-
-    private DecimalFormat df = new DecimalFormat("#.##");
-
     private ParseadorRespuestasHTTP(){}
 
     public static ParseadorRespuestasHTTP getInstance() {
@@ -80,17 +76,19 @@ public class ParseadorRespuestasHTTP {
 
                         // Cambios en los precios de 1h, 24h y 7d
                         double porcenCambio7d = datosMoneda.optDouble("price_change_percentage_7d_in_currency", -1);
-                        porcenCambio7d = Utils.eliminarNotacionCientificaDouble(porcenCambio7d);
+                        porcenCambio7d = Utils.eliminarNotacionCientificaDouble(porcenCambio7d,2,2);
 
                         double porcenCambio24h = datosMoneda.optDouble("price_change_percentage_24h_in_currency", -1);
-                        porcenCambio24h = Utils.eliminarNotacionCientificaDouble(porcenCambio24h);
+                        porcenCambio24h = Utils.eliminarNotacionCientificaDouble(porcenCambio24h,2,2);
 
                         double porcenCambio1h = datosMoneda.optDouble("price_change_percentage_1h_in_currency", -1);
-                        porcenCambio1h = Utils.eliminarNotacionCientificaDouble(porcenCambio1h);
+                        porcenCambio1h = Utils.eliminarNotacionCientificaDouble(porcenCambio1h,2,2);
+
+                        double volumenTotal = datosMoneda.getDouble("total_volume");
 
                         // Creamos la moneda
                         Moneda moneda = new Moneda(idNombreMoneda, nombreCompleto, nombreAbreviado, precioActualUSD,
-                                porcenCambio1h, porcenCambio24h, porcenCambio7d, marketCapUSD, urlImagen);
+                                porcenCambio1h, porcenCambio24h, porcenCambio7d, marketCapUSD, volumenTotal, urlImagen);
 
                         // Añadimos la moneda a la lista
                         monedas.add(moneda);
@@ -164,4 +162,22 @@ public class ParseadorRespuestasHTTP {
         });
     }
 
+    public Maybe<ArrayList<Exchange>> parsearDatosGeneralesDeTodosEXCHANGES(final String json){
+
+        return Maybe.create(new MaybeOnSubscribe<ArrayList<Exchange>>() {
+            @Override
+            public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) throws Throwable {
+
+                JSONObject raiz = new JSONObject(json);
+
+                ArrayList<Exchange> listadoExchanges = new ArrayList<>();
+                JSONArray array_exchanges = raiz.getJSONArray("data");
+
+                for (int i=0; i<array_exchanges.length(); i++){
+
+
+                }
+            }
+        });
+    }
 }

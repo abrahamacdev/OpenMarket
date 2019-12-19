@@ -7,4 +7,9 @@
     <color name="colorPrimaryLight">#a6e1fa</color>
     <color name="colorAccent">#FF3484</color>
     <color name="colorGreen">#259B24</color>
+
+    <!-- Los primeros dos caracteres indican la opacidad -->
+    <color name="lineaPreciosGrafica">#BFFCC117</color>
+    <color name="sombraPreciosGrafica">#565140</color>
+    <!--<color name="lineaPreciosGrafica">#BFeab51b</color>-->
 </resources>
