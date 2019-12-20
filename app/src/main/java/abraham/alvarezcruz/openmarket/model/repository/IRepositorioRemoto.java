@@ -1,6 +1,8 @@
 package abraham.alvarezcruz.openmarket.model.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
@@ -13,4 +15,6 @@ public interface IRepositorioRemoto {
     Maybe<ArrayList<Double>> obtenerPreciosUlt8DiasDe(String idCriptomoneda);
 
     Maybe<ArrayList<Exchange>> obtenerDatosGeneralesTodosExchanges();
+
+    Maybe<HashMap<String, String>> obtenerImagenDeLasExchanges(HashMap<String, String> idExchangesYSuImagen);
 }

@@ -36,4 +36,15 @@
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
 
+    <!-- detalle_exchange.xml -->
+    <dimen name="altura_raiz_detalle_exchange">92dp</dimen>
+    <dimen name="margenes_laterales_relative_detalle_exchange">8dp</dimen>
+    <dimen name="margen_superior_relative_detalle_exchange">4dp</dimen>
+    <dimen name="margen_inferior_relative_detalle_exchange">4dp</dimen>
+    <dimen name="ancho_imagen_exchange_detalle_exchange">48dp</dimen>
+    <dimen name="alto_imagen_exchange_detalle_exchange">48dp</dimen>
+    <dimen name="margen_izquierdo_imagen_exchange_detalle_exchange">12dp</dimen>
+    <dimen name="padding_izquierdo_contenedor_datos_exchange">18dp</dimen>
+    <dimen name="margen_derecho_contenedor_ranking">20dp</dimen>
+
 </resources>

@@ -1,8 +1,10 @@
 package abraham.alvarezcruz.openmarket.model.repository;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
+import com.airbnb.lottie.L;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -10,7 +12,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.security.cert.CollectionCertStoreParameters;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
@@ -19,6 +28,8 @@ import abraham.alvarezcruz.openmarket.utils.Utils;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.MaybeEmitter;
 import io.reactivex.rxjava3.core.MaybeOnSubscribe;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class RepositorioRemotoImpl implements IRepositorioRemoto {
 
@@ -132,6 +143,8 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
 
                 String url = Constantes.COINCAP_BASE_URL + Constantes.COINCAP_API_VERSION + Constantes.COINCAP_EXCHANGES_ENDPOINT;
 
+                Log.e(TAG_NAME, url);
+
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -139,10 +152,47 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                             public void onResponse(String response) {
 
                                 ParseadorRespuestasHTTP parseadorRespuestasHTTP = ParseadorRespuestasHTTP.getInstance();
-                                Maybe<ArrayList<Moneda>> maybeMonedas = parseadorRespuestasHTTP.parsearDatosGeneralesDeTodasMonedas(response);
+                                Maybe<ArrayList<Exchange>> maybeExhanges = parseadorRespuestasHTTP.parsearDatosGeneralesDeTodosExchanges(response);
 
-                                maybeMonedas.subscribe(monedas -> {
-                                    emitter.onSuccess(monedas);
+                                // Esperamos a que se parseen las respuestas
+                                maybeExhanges.subscribe(exchanges -> {
+
+                                    // Obtenemos aquellos exchanges que tengan volumen
+                                    ArrayList<Exchange> exchangesValidos = Observable.fromIterable(exchanges)
+                                            .filter((exchange) -> exchange.getVolumen() > 0)
+                                            .collect(ArrayList<Exchange>::new, ArrayList::add)
+                                            .blockingGet();
+
+                                    // Esto servirá para agilizar el emparejamiento de Exchange-Imagen
+                                    HashMap<String, String> idsExchangesYSuImagen = new HashMap<>();
+                                    HashMap<String, Exchange> idsExchangeYSuObjeto = new HashMap<>();
+                                    Observable.fromIterable(exchangesValidos)
+                                            .forEach(exchange -> {
+                                                idsExchangesYSuImagen.put(exchange.getId(), "");
+                                                idsExchangeYSuObjeto.put(exchange.getId(), exchange);
+                                            });
+
+
+                                    // Obtenemos las imagenes de cada exchange y la seteamos a su respectivo objeto
+                                    Maybe<HashMap<String,String>> mapConImagenes = obtenerImagenDeLasExchanges(idsExchangesYSuImagen);
+                                    mapConImagenes.subscribe((idsExchangesYSuImagenTemp) -> {
+
+                                        for (String idExchange : idsExchangesYSuImagenTemp.keySet()){
+                                            Exchange exchange = idsExchangeYSuObjeto.get(idExchange);
+                                            exchange.setUrlImagen(idsExchangesYSuImagenTemp.get(idExchange));
+                                            idsExchangeYSuObjeto.put(idExchange, exchange);
+                                        }
+
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            exchangesValidos.sort(Comparator.comparingInt(Exchange::getRanking));
+                                        }
+
+                                        // Emitimos los exchanges con todos los datos
+                                        emitter.onSuccess(exchangesValidos);
+                                    }, error -> {
+                                        error.printStackTrace();
+                                    });
                                 }, error -> {
                                     emitter.onError(error);
                                 });
@@ -159,6 +209,48 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                 // Add the request to the RequestQueue.
                 requestQueue.add(stringRequest);
 
+            }
+        });
+    }
+
+    @Override
+    public Maybe<HashMap<String, String>> obtenerImagenDeLasExchanges(HashMap<String,String> idExchangesYSuImagen) {
+        return Maybe.create(new MaybeOnSubscribe<HashMap<String, String>>() {
+            @Override
+            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) throws Throwable {
+
+                String params = "?per_page=250";
+                String url = Constantes.COINGECKO_BASE_URL + Constantes.COINGECKO_API_VERSION + Constantes.COINGECKO_EXCHANGES_ENDPOINT;
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url + params,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                ParseadorRespuestasHTTP parseadorRespuestasHTTP = ParseadorRespuestasHTTP.getInstance();
+                                Maybe<HashMap<String, String>> maybeIdExchangeYSuImagen = parseadorRespuestasHTTP.parsearImagenDeTodosExchanges(response, idExchangesYSuImagen);
+
+
+                                // Emitimos el map ya con las imagenes cargadas
+                                maybeIdExchangeYSuImagen.subscribe((idExchangesYSuImagenTemp) -> {
+
+                                    emitter.onSuccess(idExchangesYSuImagenTemp);
+                                }, (error) -> {
+
+                                    emitter.onError(error);
+                                });
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        emitter.onError(error);
+                    }
+                });
+
+                // Add the request to the RequestQueue.
+                requestQueue.add(stringRequest);
             }
         });
     }

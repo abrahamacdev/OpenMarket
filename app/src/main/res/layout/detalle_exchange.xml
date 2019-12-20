@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="@dimen/altura_raiz_detalle_exchange">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="@dimen/margen_superior_relative_detalle_exchange"
+        android:layout_marginRight="@dimen/margenes_laterales_relative_detalle_exchange"
+        android:layout_marginLeft="@dimen/margenes_laterales_relative_detalle_exchange"
+        android:layout_marginBottom="@dimen/margen_inferior_relative_detalle_exchange">
+
+        <ImageView
+            android:id="@+id/imagenExchange"
+            android:layout_width="@dimen/ancho_imagen_exchange_detalle_exchange"
+            android:layout_height="@dimen/alto_imagen_exchange_detalle_exchange"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margen_izquierdo_imagen_exchange_detalle_exchange"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imagenExchange"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_izquierdo_contenedor_datos_exchange"
+            android:weightSum="3">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelNombreExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:text="Nombre: "/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/nombreExchange"
+                    android:layout_toRightOf="@+id/labelNombreExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:text="Kraken"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/labelVolumenExchange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:text="Volumen: "/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/volumenExchange"
+                        android:layout_toRightOf="@+id/labelVolumenExchange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:text="423423.425453 USD"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    android:layout_marginRight="@dimen/margen_derecho_contenedor_ranking">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/labelRankingExchange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:text="Ranking:"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/rankingExchange"
+                        android:layout_toRightOf="@+id/labelRankingExchange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:text="1"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelParesTradeosExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:text="Pares de tradeos: "/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/paresTradeosExchange"
+                    android:layout_toRightOf="@+id/labelParesTradeosExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:text="52"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

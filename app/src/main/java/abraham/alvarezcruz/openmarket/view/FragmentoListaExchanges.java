@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.ExchangesAdapter;
@@ -37,7 +38,7 @@ public class FragmentoListaExchanges extends Fragment {
 
     private ExchangesAdapter exchangesAdapter;
     private ExchangesViewModel exchangesViewModel;
-    private MutableLiveData<Exchange> listaExchangesMutable;
+    private MutableLiveData<ArrayList<Exchange>> listaExchangesMutable;
 
     @Nullable
     @Override
@@ -76,7 +77,7 @@ public class FragmentoListaExchanges extends Fragment {
 
     private void initRecyclerView(){
 
-        exchangesAdapter = new ExchangesAdapter();
+        exchangesAdapter = new ExchangesAdapter(R.layout.detalle_exchange);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),0));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -87,11 +88,11 @@ public class FragmentoListaExchanges extends Fragment {
 
         // Cargamos el listado de monedas
         exchangesViewModel = ViewModelProviders.of(this).get(ExchangesViewModel.class);
-        listaExchangesMutable = exchangesViewModel.getListadoMonedas();
-        listaExchangesMutable.observe(this, new Observer<ArrayList<Moneda>>() {
+        listaExchangesMutable = exchangesViewModel.getListadoExchanges();
+        listaExchangesMutable.observe(this, new Observer<ArrayList<Exchange>>() {
             @Override
-            public void onChanged(ArrayList<Moneda> monedas) {
-                listadoMonedasAdapter.updateAll(monedas);
+            public void onChanged(ArrayList<Exchange> exchanges) {
+                exchangesAdapter.updateAll(exchanges);
             }
         });
     }

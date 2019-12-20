@@ -11,8 +11,7 @@
         android:layout_marginTop="@dimen/margen_superior_relative_detalle_moneda"
         android:layout_marginRight="@dimen/margenes_laterales_relative_detalle_moneda"
         android:layout_marginLeft="@dimen/margenes_laterales_relative_detalle_moneda"
-        android:layout_marginBottom="@dimen/margen_inferior_relative_detalle_moneda"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/margen_inferior_relative_detalle_moneda">
 
         <RelativeLayout
             android:id="@+id/contenedorDatosGenerales"

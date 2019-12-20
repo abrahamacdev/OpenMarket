@@ -3,6 +3,8 @@ package abraham.alvarezcruz.openmarket.model.repository;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+import com.airbnb.lottie.L;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +15,7 @@ import org.threeten.bp.ZoneId;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
@@ -162,7 +165,12 @@ public class ParseadorRespuestasHTTP {
         });
     }
 
-    public Maybe<ArrayList<Exchange>> parsearDatosGeneralesDeTodosEXCHANGES(final String json){
+    /**
+     * Obtenemos los datos generales de todos los exchanges (nombre, ranking, volumen... etc)
+     * @param json
+     * @return
+     */
+    public Maybe<ArrayList<Exchange>> parsearDatosGeneralesDeTodosExchanges(final String json){
 
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Exchange>>() {
             @Override
@@ -175,8 +183,46 @@ public class ParseadorRespuestasHTTP {
 
                 for (int i=0; i<array_exchanges.length(); i++){
 
+                    JSONObject exchange = array_exchanges.getJSONObject(i);
 
+                    String id = exchange.getString("exchangeId");
+                    String nombre = exchange.getString("name");
+                    int ranking = exchange.getInt("rank");
+                    double volumen = exchange.optDouble("volumeUsd", 0.0);
+                    int paresTradeos = exchange.getInt("tradingPairs");
+
+                    Exchange nuevoExchange = new Exchange(nombre, id, ranking, paresTradeos, volumen);
+                    listadoExchanges.add(nuevoExchange);
                 }
+
+                emitter.onSuccess(listadoExchanges);
+            }
+        });
+    }
+
+    /**
+     * Obtenemos las imagenes de los exchanges solicitados por parámetro
+     * @param json
+     * @return
+     */
+    public Maybe<HashMap<String, String>> parsearImagenDeTodosExchanges(final String json, HashMap<String, String> idsExchangesYSuImagen){
+        return Maybe.create(new MaybeOnSubscribe<HashMap<String, String>>() {
+            @Override
+            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) throws Throwable {
+
+                JSONArray raiz = new JSONArray(json);
+
+                for (int i=0; i<raiz.length(); i++){
+
+                    JSONObject exchange = raiz.getJSONObject(i);
+                    String id = exchange.getString("id");
+
+                    if (idsExchangesYSuImagen.containsKey(id)){
+                        idsExchangesYSuImagen.put(id, exchange.getString("image"));
+                    }
+                }
+
+                emitter.onSuccess(idsExchangesYSuImagen);
             }
         });
     }

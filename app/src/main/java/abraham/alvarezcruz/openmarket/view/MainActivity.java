@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void mostrarFragmentoExchanges(){
 
-        //FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda);
+        FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges();
         fragmentManager.beginTransaction()
-                //.replace(R.id.contenedorFragmentos, fragmentoGraficaMoneda, FragmentoGraficaMoneda.TAG_NAME)
-                //.addToBackStack(FragmentoGraficaMoneda.TAG_NAME)
+                .replace(R.id.contenedorFragmentos, fragmentoListaExchanges, FragmentoListaExchanges.TAG_NAME)
+                .addToBackStack(FragmentoListaExchanges.TAG_NAME)
                 .commit();
     }
 

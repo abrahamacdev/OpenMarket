@@ -2,7 +2,7 @@ package abraham.alvarezcruz.openmarket.model.pojo;
 
 public class Exchange {
 
-    private String nombre, id;
+    private String nombre, id, urlImagen;
     private int ranking, paresTradeos;
     private double volumen;
 
@@ -55,5 +55,13 @@ public class Exchange {
 
     public void setVolumen(double volumen) {
         this.volumen = volumen;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 }
