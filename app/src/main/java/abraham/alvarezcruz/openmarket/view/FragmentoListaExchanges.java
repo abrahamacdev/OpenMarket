@@ -25,7 +25,6 @@ import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.ExchangesAdapter;
 import abraham.alvarezcruz.openmarket.model.livedata.ExchangesViewModel;
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
-import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 
 public class FragmentoListaExchanges extends Fragment {
 
@@ -87,7 +86,8 @@ public class FragmentoListaExchanges extends Fragment {
     private void cargarListadoExchanges(){
 
         // Cargamos el listado de monedas
-        exchangesViewModel = ViewModelProviders.of(this).get(ExchangesViewModel.class);
+        // TODO El ViewModel lo ligamos a la actividad principal para así evitar realizar múltiples peticiones
+        exchangesViewModel = ViewModelProviders.of(getActivity()).get(ExchangesViewModel.class);
         listaExchangesMutable = exchangesViewModel.getListadoExchanges();
         listaExchangesMutable.observe(this, new Observer<ArrayList<Exchange>>() {
             @Override

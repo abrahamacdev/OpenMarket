@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarFragmentoExchanges(){
-
+        
         FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges();
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaExchanges, FragmentoListaExchanges.TAG_NAME)
