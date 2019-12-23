@@ -1,5 +1,6 @@
 package abraham.alvarezcruz.openmarket.model.livedata;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.util.Log;
 
@@ -13,9 +14,9 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
-import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemotoImpl;
-import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import abraham.alvarezcruz.openmarket.model.repository.remote.RepositorioRemotoImpl;
+import io.reactivex.Maybe;
+import io.reactivex.schedulers.Schedulers;
 
 public class ExchangesViewModel extends AndroidViewModel {
 
@@ -44,6 +45,7 @@ public class ExchangesViewModel extends AndroidViewModel {
         return listadoExchanges;
     }
 
+    @SuppressLint("CheckResult")
     public void recargarListadoExchanges(){
 
         Log.e(TAG_NAME, "Vamos a realizar una nueva petición!!");

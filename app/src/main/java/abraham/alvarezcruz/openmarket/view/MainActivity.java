@@ -1,20 +1,26 @@
 package abraham.alvarezcruz.openmarket.view;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import java.util.concurrent.TimeUnit;
+
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +46,27 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaMoneda)
                 .commit();
+
+        Runtime runtime = Runtime.getRuntime();
+
+        // Todo Solo descomentar cuando se quiera monitorizar la memoria disponible y usada por la aplicación
+        /*
+        Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.computation())
+                .subscribe((tick) -> {
+
+                    ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+                    ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+                    activityManager.getMemoryInfo(mi);
+                    double availableMegs = mi.availMem / 0x100000L;
+                    final long usedMemInMB=(runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+
+                    String dispo = "Disponible -> " + availableMegs + "Mb";
+                    String usada = "Usada -> " + usedMemInMB + "Mb";
+
+                    Log.e(TAG_NAME, dispo + "\n" + usada);
+                });
+        */
     }
 
 
@@ -88,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarFragmentoExchanges(){
-        
+
         FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges();
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaExchanges, FragmentoListaExchanges.TAG_NAME)

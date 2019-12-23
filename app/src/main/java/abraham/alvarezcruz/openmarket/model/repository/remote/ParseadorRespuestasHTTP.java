@@ -1,9 +1,4 @@
-package abraham.alvarezcruz.openmarket.model.repository;
-
-import android.util.Log;
-import android.widget.LinearLayout;
-
-import com.airbnb.lottie.L;
+package abraham.alvarezcruz.openmarket.model.repository.remote;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,17 +7,15 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.MaybeEmitter;
-import io.reactivex.rxjava3.core.MaybeOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeEmitter;
+import io.reactivex.MaybeOnSubscribe;
 
 public class ParseadorRespuestasHTTP {
 
@@ -49,7 +42,7 @@ public class ParseadorRespuestasHTTP {
 
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Moneda>>() {
             @Override
-            public void subscribe(MaybeEmitter<ArrayList<Moneda>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Moneda>> emitter) {
 
                 ArrayList<Moneda> monedas = new ArrayList<>();
 
@@ -174,25 +167,30 @@ public class ParseadorRespuestasHTTP {
 
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Exchange>>() {
             @Override
-            public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) {
 
-                JSONObject raiz = new JSONObject(json);
-
+                JSONObject raiz = null;
                 ArrayList<Exchange> listadoExchanges = new ArrayList<>();
-                JSONArray array_exchanges = raiz.getJSONArray("data");
+                try {
+                    raiz = new JSONObject(json);
 
-                for (int i=0; i<array_exchanges.length(); i++){
+                    JSONArray array_exchanges = raiz.getJSONArray("data");
 
-                    JSONObject exchange = array_exchanges.getJSONObject(i);
+                    for (int i=0; i<array_exchanges.length(); i++){
 
-                    String id = exchange.getString("exchangeId");
-                    String nombre = exchange.getString("name");
-                    int ranking = exchange.getInt("rank");
-                    double volumen = exchange.optDouble("volumeUsd", 0.0);
-                    int paresTradeos = exchange.getInt("tradingPairs");
+                        JSONObject exchange = array_exchanges.getJSONObject(i);
 
-                    Exchange nuevoExchange = new Exchange(nombre, id, ranking, paresTradeos, volumen);
-                    listadoExchanges.add(nuevoExchange);
+                        String id = exchange.getString("exchangeId");
+                        String nombre = exchange.getString("name");
+                        int ranking = exchange.getInt("rank");
+                        double volumen = exchange.optDouble("volumeUsd", 0.0);
+                        int paresTradeos = exchange.getInt("tradingPairs");
+
+                        Exchange nuevoExchange = new Exchange(nombre, id, ranking, paresTradeos, volumen);
+                        listadoExchanges.add(nuevoExchange);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
                 emitter.onSuccess(listadoExchanges);
@@ -208,21 +206,26 @@ public class ParseadorRespuestasHTTP {
     public Maybe<HashMap<String, String>> parsearImagenDeTodosExchanges(final String json, HashMap<String, String> idsExchangesYSuImagen){
         return Maybe.create(new MaybeOnSubscribe<HashMap<String, String>>() {
             @Override
-            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) {
 
-                JSONArray raiz = new JSONArray(json);
+                JSONArray raiz = null;
+                try {
+                    raiz = new JSONArray(json);
 
-                for (int i=0; i<raiz.length(); i++){
+                    for (int i=0; i<raiz.length(); i++){
 
-                    JSONObject exchange = raiz.getJSONObject(i);
-                    String id = exchange.getString("id");
+                        JSONObject exchange = raiz.getJSONObject(i);
+                        String id = exchange.getString("id");
 
-                    if (idsExchangesYSuImagen.containsKey(id)){
-                        idsExchangesYSuImagen.put(id, exchange.getString("image"));
+                        if (idsExchangesYSuImagen.containsKey(id)){
+                            idsExchangesYSuImagen.put(id, exchange.getString("image"));
+                        }
                     }
-                }
 
-                emitter.onSuccess(idsExchangesYSuImagen);
+                    emitter.onSuccess(idsExchangesYSuImagen);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

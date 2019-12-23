@@ -1,12 +1,11 @@
-package abraham.alvarezcruz.openmarket.model.repository;
+package abraham.alvarezcruz.openmarket.model.repository.remote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.Maybe;
 
 public interface IRepositorioRemoto {
 

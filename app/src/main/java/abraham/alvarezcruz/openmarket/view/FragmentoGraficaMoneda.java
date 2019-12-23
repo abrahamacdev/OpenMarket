@@ -1,10 +1,14 @@
 package abraham.alvarezcruz.openmarket.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -19,7 +23,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieAnimationView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -37,10 +43,14 @@ import org.threeten.bp.LocalDate;
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.R;
+import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
-import abraham.alvarezcruz.openmarket.model.repository.RepositorioRemotoImpl;
+import abraham.alvarezcruz.openmarket.model.repository.remote.RepositorioRemotoImpl;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.Maybe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class FragmentoGraficaMoneda extends Fragment {
 
@@ -58,8 +68,11 @@ public class FragmentoGraficaMoneda extends Fragment {
     private Context context;
     private LineChart grafica;
     private LinearLayout contenedorPrincipalGraficaMoneda;
+    private Menu menu;
 
     private RepositorioRemotoImpl repositorioRemoto_Impl;
+    private MonedasViewModel monedasViewModel;
+
 
     public FragmentoGraficaMoneda(Moneda moneda){
         this.moneda = moneda;
@@ -71,6 +84,10 @@ public class FragmentoGraficaMoneda extends Fragment {
 
         view = inflater.inflate(R.layout.activity_detalles_con_grafica_moneda, container, false);
         context = container.getContext();
+        setHasOptionsMenu(true);
+
+        // Utilizaremos este view model para guardar la moneda en la base de datos
+        monedasViewModel = ViewModelProviders.of(parent).get(MonedasViewModel.class);
 
         // Inicializamos las vistas
         initViews();
@@ -94,6 +111,7 @@ public class FragmentoGraficaMoneda extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
 
         grafica = view.findViewById(R.id.grafica);
         animacion = view.findViewById(R.id.animacion_bitcoin);
@@ -209,6 +227,7 @@ public class FragmentoGraficaMoneda extends Fragment {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void cargarGrafica(){
 
         if (moneda.getValoresUlt8D().size() == 0){
@@ -342,6 +361,77 @@ public class FragmentoGraficaMoneda extends Fragment {
         });
         grafica.setAnimation(fadeIn);
 
+    }
+
+    private void setearIconoFavoritos(int idDrawable){
+        Drawable drawable = ContextCompat.getDrawable(context, idDrawable);
+        menu.findItem(R.id.favorita).setIcon(drawable);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Guardamos la instancia del menú y lo inflamos
+        this.menu = menu;
+        inflater.inflate(R.menu.menu_detalle_moneda, menu);
+
+        // Cambiamos el icono "favcoritos" dependiendo de si la moneda está guardada como favorita
+        int idDrawable = moneda.isFavorita() ? R.drawable.ic_favorite_red_24dp : R.drawable.ic_favorite_border_red_24dp;
+        setearIconoFavoritos(idDrawable);
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.favorita:
+
+                // Agregamos|Borramos la moneda a|de la lista de favoritos
+                if (!moneda.isFavorita()){
+                    Maybe<Boolean> maybeGuardadoEnFavs = monedasViewModel.guardarMonedaFavorita(moneda);
+                    maybeGuardadoEnFavs
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSuccess(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean resultado) throws Exception {
+
+                                    if (resultado){
+                                        // Cambiamos el icono de "favoritos"
+                                        setearIconoFavoritos(R.drawable.ic_favorite_red_24dp);
+                                    }
+                                }
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(
+                            (guardada) -> {},
+                            Throwable::printStackTrace);
+                }
+
+                else {
+                    Maybe<Boolean> maybeEliminadoDeFavs = monedasViewModel.eliminarMonedaFavorita(moneda);
+                    maybeEliminadoDeFavs
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSuccess(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean resultado) throws Exception {
+
+                                    if (resultado){
+                                        // Cambiamos el icono de "favoritos"
+                                        setearIconoFavoritos(R.drawable.ic_favorite_border_red_24dp);
+                                    }
+                                }
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(
+                                    (guardada) -> {},
+                                    Throwable::printStackTrace);
+                }
+                break;
+        }
+
+        return false;
     }
 
     @Override

@@ -1,22 +1,50 @@
 package abraham.alvarezcruz.openmarket.model.pojo;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 
+import abraham.alvarezcruz.openmarket.model.repository.local.FavoritosContract;
+
+@Entity(tableName = FavoritosContract.FavoritosEntry.TABLE_NAME, indices =
+        {@Index(value = {FavoritosContract.FavoritosEntry._ID, FavoritosContract.FavoritosEntry.COLUMNA_ID_CRIPTOMONEDA},
+        unique = true)})
 public class Moneda {
 
-    private String nombre, abreviatura, idNombreMoneda;
+    // En la práctica, no tendra ningún uso
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = FavoritosContract.FavoritosEntry._ID)
+    private int id;
+
+    @ColumnInfo(name = FavoritosContract.FavoritosEntry.COLUMNA_ID_CRIPTOMONEDA)
+    @NonNull
+    private String idNombreMoneda;
+
+    @Ignore
+    private String nombre, abreviatura;
+
+    @Ignore
     private String urlImagen;
-    private Bitmap imagen;
+
+    @Ignore
     private double precioActualUSD, precioActualBTC;
-    private double cambio1h;
-    private double cambio24h;
-    private double cambio7d;
+
+    @Ignore
+    private double cambio1h, cambio24h, cambio7d;
+
+    @Ignore
     private double marketCapTotal, volumenTotal;
+
+    @Ignore
     private ArrayList<Double> valoresUlt8D = new ArrayList<>();
+
+    @Ignore
+    private boolean favorita = false;
 
     public Moneda(){}
 
@@ -40,6 +68,14 @@ public class Moneda {
     @Override
     public String toString() {
         return nombre + " (" + abreviatura + ") está a un valor de " + precioActualUSD + "$";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -130,19 +166,19 @@ public class Moneda {
         this.valoresUlt8D = valoresUlt8D;
     }
 
-    public Bitmap getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(Bitmap imagen) {
-        this.imagen = imagen;
-    }
-
     public double getVolumenTotal() {
         return volumenTotal;
     }
 
     public void setVolumenTotal(double volumenTotal) {
         this.volumenTotal = volumenTotal;
+    }
+
+    public boolean isFavorita() {
+        return favorita;
+    }
+
+    public void setFavorita(boolean favorita) {
+        this.favorita = favorita;
     }
 }

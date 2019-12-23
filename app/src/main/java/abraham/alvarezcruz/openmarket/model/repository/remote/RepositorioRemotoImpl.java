@@ -1,10 +1,10 @@
-package abraham.alvarezcruz.openmarket.model.repository;
+package abraham.alvarezcruz.openmarket.model.repository.remote;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import com.airbnb.lottie.L;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -12,24 +12,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.security.cert.CollectionCertStoreParameters;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Constantes;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.MaybeEmitter;
-import io.reactivex.rxjava3.core.MaybeOnSubscribe;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeEmitter;
+import io.reactivex.MaybeOnSubscribe;
+import io.reactivex.Observable;
 
 public class RepositorioRemotoImpl implements IRepositorioRemoto {
 
@@ -48,7 +42,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
 
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Moneda>>() {
             @Override
-            public void subscribe(final MaybeEmitter<ArrayList<Moneda>> emitter) throws Throwable {
+            public void subscribe(final MaybeEmitter<ArrayList<Moneda>> emitter) {
 
                 // Lista con las monedas parseadas
                 ArrayList<Moneda> listadoMonedas = new ArrayList<>();
@@ -62,6 +56,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url + params,
                         new Response.Listener<String>() {
+                            @SuppressLint("CheckResult")
                             @Override
                             public void onResponse(String response) {
 
@@ -93,7 +88,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
     public Maybe<ArrayList<Double>> obtenerPreciosUlt8DiasDe(String idCriptomoneda) {
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Double>>() {
             @Override
-            public void subscribe(MaybeEmitter<ArrayList<Double>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Double>> emitter) {
 
                 // {@see https://www.coingecko.com/api/documentations/v3#/coins/get_coins__id__market_chart_range}
                 long hace4meses = Utils.obtenerMediodiaEnMillisDeHace(4);
@@ -114,11 +109,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                                 ParseadorRespuestasHTTP parseadorRespuestasHTTP = ParseadorRespuestasHTTP.getInstance();
                                 Maybe<ArrayList<Double>> maybePreciosCotizacion = parseadorRespuestasHTTP.parsearPreciosCotizacionDeUnaMoneda(response, 8);
 
-                                maybePreciosCotizacion.subscribe(precios -> {
-                                    emitter.onSuccess(precios);
-                                }, error -> {
-                                    emitter.onError(error);
-                                });
+                                maybePreciosCotizacion.subscribe(emitter::onSuccess, emitter::onError);
 
                             }
                         }, new Response.ErrorListener() {
@@ -139,7 +130,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
     public Maybe<ArrayList<Exchange>> obtenerDatosGeneralesTodosExchanges() {
         return Maybe.create(new MaybeOnSubscribe<ArrayList<Exchange>>() {
             @Override
-            public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) {
 
                 String url = Constantes.COINCAP_BASE_URL + Constantes.COINCAP_API_VERSION + Constantes.COINCAP_EXCHANGES_ENDPOINT;
 
@@ -148,6 +139,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
+                            @SuppressLint("CheckResult")
                             @Override
                             public void onResponse(String response) {
 
@@ -217,7 +209,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
     public Maybe<HashMap<String, String>> obtenerImagenDeLasExchanges(HashMap<String,String> idExchangesYSuImagen) {
         return Maybe.create(new MaybeOnSubscribe<HashMap<String, String>>() {
             @Override
-            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) throws Throwable {
+            public void subscribe(MaybeEmitter<HashMap<String, String>> emitter) {
 
                 String params = "?per_page=250";
                 String url = Constantes.COINGECKO_BASE_URL + Constantes.COINGECKO_API_VERSION + Constantes.COINGECKO_EXCHANGES_ENDPOINT;
@@ -225,6 +217,7 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url + params,
                         new Response.Listener<String>() {
+                            @SuppressLint("CheckResult")
                             @Override
                             public void onResponse(String response) {
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoMonedasVH> {
 

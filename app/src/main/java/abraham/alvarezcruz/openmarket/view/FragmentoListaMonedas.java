@@ -2,6 +2,7 @@ package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.L;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -27,9 +29,11 @@ import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.MonedasAdapter;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
-import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class FragmentoListaMonedas extends Fragment implements View.OnClickListener {
+
+    public static String TAG_NAME = FragmentoListaMonedas.class.getSimpleName();
 
     private View view;
     private AppCompatActivity mainActivity;
@@ -41,6 +45,7 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
     private PublishSubject<Moneda> monedaClickeadaSubject;
     private PublishSubject<View> fabAperturaExchangesSubject;
     private MutableLiveData<ArrayList<Moneda>> listaMonedasMutable;
+    private MutableLiveData<ArrayList<String>> listaIdsMonedasFavoritas;
     private MonedasViewModel monedasViewModel;
 
     public FragmentoListaMonedas(){
@@ -112,8 +117,8 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
 
     private void cargarListadoMonedas(){
 
-        // Cargamos el listado de monedas
-        monedasViewModel = ViewModelProviders.of(this).get(MonedasViewModel.class);
+        // Ligamos el "MonedasViewModel" a la activity, así podremos acceder a la información desde cualquier fragment
+        monedasViewModel = ViewModelProviders.of(mainActivity).get(MonedasViewModel.class);
         listaMonedasMutable = monedasViewModel.getListadoMonedas();
         listaMonedasMutable.observe(this, new Observer<ArrayList<Moneda>>() {
             @Override
@@ -121,6 +126,14 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
                 monedasAdapter.updateAll(monedas);
             }
         });
+
+        // Si no tenemos valores cacheados, realizaremos una petición
+        if (listaMonedasMutable.getValue().size() == 0){
+            monedasViewModel.recargarListadoMonedas();
+        }
+
+
+        listaIdsMonedasFavoritas = monedasViewModel.getListadoIdsMonedasFavoritas();
     }
 
     public PublishSubject<Moneda> getMonedaClickeadaSubject() {
