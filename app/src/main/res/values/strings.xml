@@ -6,4 +6,7 @@
     <string name="sigla_dia">d</string>
 
     <string name="market_cap">Market Cap</string>
+
+    <string name="label_viewpager_todas">Todas</string>
+    <string name="label_viewpager_favoritas">Favoritas</string>
 </resources>

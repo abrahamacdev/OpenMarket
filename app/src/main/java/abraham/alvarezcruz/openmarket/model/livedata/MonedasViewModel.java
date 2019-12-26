@@ -57,7 +57,11 @@ public class MonedasViewModel extends AndroidViewModel {
 
         listadoIdsMonedasFavoritas = new MutableLiveData<>();
         listadoIdsMonedasFavoritas.setValue(new ArrayList<>());
+
+        listadoMonedasFavoritas = new MutableLiveData<>();
+        listadoMonedasFavoritas.setValue(new ArrayList<>());
     }
+
 
 
     public MutableLiveData<ArrayList<Moneda>> getListadoMonedas() {
@@ -90,16 +94,6 @@ public class MonedasViewModel extends AndroidViewModel {
                     listadoMonedas.setValue(listaDeMonedas);
                     //listadoMonedas.postValue(listaDeMonedas);
                 });
-        /*Maybe<ArrayList<Moneda>> maybeListaMonedas = repositorioRemoto_Impl.obtenerDatosGeneralesTodasCriptomonedas(1,250);
-        maybeListaMonedas
-                .subscribeOn(Schedulers.computation())
-                .subscribe(listaDeMonedas -> {
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas");
-
-                    listadoMonedas.setValue(listaDeMonedas);
-                    //listadoMonedas.postValue(listaDeMonedas);
-                });*/
-
 
 
         /*
@@ -116,25 +110,6 @@ public class MonedasViewModel extends AndroidViewModel {
                     listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs));
                     //listadoIdsMonedasFavoritas.postValue(new ArrayList<>(idsTodasMonedasFavoritas));
                 });
-        /*Maybe<List<String>> maybeListaIdsMonedasFavoritas = obtenerIdsTodasMonedasFavs();
-        maybeListaIdsMonedasFavoritas
-                .doOnSuccess((listaIdsMonedasFavs) -> {
-
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas favoritas");
-
-                    listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs));
-                    //listadoIdsMonedasFavoritas.postValue(new ArrayList<>(idsTodasMonedasFavoritas));
-                })
-                .subscribeOn(Schedulers.io())
-                .subscribe();*/
-
-
-        /*Maybe.just(maybeListaIdsMonedasFavoritas)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .doAfterSuccess((listaIdsMonedasFavs) -> {
-                    listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs.blockingGet()));
-                    //listadoIdsMonedasFavoritas.postValue(new ArrayList<>(idsTodasMonedasFavoritas));
-                });*/
 
         /*
             Esto puede parecer algo complejo, pero la idea es muy simple.
@@ -221,6 +196,7 @@ public class MonedasViewModel extends AndroidViewModel {
 
                 if (borrado){
                     moneda.setFavorita(false);
+                    eliminarMonedaDeLDConId(moneda.getIdNombreMoneda());
                     emitter.onSuccess(true);
                 }
 
@@ -233,18 +209,30 @@ public class MonedasViewModel extends AndroidViewModel {
 
     public void recargarListadoMonedasFavoritas(){
 
-        /*
-            Obtenemos la lista de monedas de internet y las seteamos a #listadoMonedas MEDIANTE "setValue()"
-            De esta forma evitamos que a los "observadores" se les avise de la actualización de la lista
-         */
-        Maybe<ArrayList<Moneda>> maybeListaMonedas = repositorioRemoto_Impl.obtenerDatosGeneralesTodasCriptomonedas(1,250);
-        maybeListaMonedas = maybeListaMonedas
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(listaDeMonedas -> {
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas");
+        Maybe<ArrayList<Moneda>> maybeListaMonedas = null;
 
-                    listadoMonedas.setValue(listaDeMonedas);
-                });
+
+        // Si hay monedas en el "listado principal" (todas las monedas), evitamos hacer más peticiones
+        if (listadoMonedas.getValue().size() > 0){
+            maybeListaMonedas = Maybe.just(listadoMonedas.getValue());
+        }
+
+        // No hay monedas, obtendremos nuevas
+        else {
+            /*
+                Obtenemos la lista de monedas de internet y las seteamos a #listadoMonedas MEDIANTE "setValue()"
+                De esta forma evitamos que a los "observadores" se les avise de la actualización de la lista
+             */
+                maybeListaMonedas = repositorioRemoto_Impl.obtenerDatosGeneralesTodasCriptomonedas(1,250);
+                maybeListaMonedas = maybeListaMonedas
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSuccess(listaDeMonedas -> {
+                            //listadoMonedas.setValue(listaDeMonedas);
+                            listadoMonedas.postValue(listaDeMonedas);
+                        });
+        }
+
+
 
         /*
             De igual manera, obtenemos el listado de ids de aquellas monedas guardadas en favoritos MEDIANTE "setValue()"
@@ -254,9 +242,6 @@ public class MonedasViewModel extends AndroidViewModel {
         maybeListaIdsMonedasFavoritas = maybeListaIdsMonedasFavoritas
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess((listaIdsMonedasFavs) -> {
-
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas favoritas");
-
                     listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs));
                 });
 
@@ -306,6 +291,7 @@ public class MonedasViewModel extends AndroidViewModel {
     }
 
 
+
     private Maybe<List<String>> obtenerIdsTodasMonedasFavs(){
         return Maybe.create(new MaybeOnSubscribe<List<String>>() {
             @Override
@@ -314,5 +300,26 @@ public class MonedasViewModel extends AndroidViewModel {
                 emitter.onSuccess(idsTodasMonedasFavoritas);
             }
         });
+    }
+
+    private void eliminarMonedaDeLDConId(String idMoneda){
+
+        ArrayList<Moneda> tempListadoMonedasFavoritas = listadoMonedasFavoritas.getValue();
+
+        int indx = -1;
+
+        for (int i = 0; i < tempListadoMonedasFavoritas.size(); i++) {
+            if (tempListadoMonedasFavoritas.get(i).getIdNombreMoneda().equals(idMoneda)){
+                indx = i;
+                break;
+            }
+        }
+
+        Log.e(TAG_NAME, "Vamos a eliminarlo de la lista. Pos: " + indx);
+
+        if (indx > -1){
+            tempListadoMonedasFavoritas.remove(indx);
+            listadoMonedasFavoritas.postValue(tempListadoMonedasFavoritas);
+        }
     }
 }

@@ -3,6 +3,7 @@ package abraham.alvarezcruz.openmarket.adapter;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoM
 
     public void updateAll(ArrayList<Moneda> listadoMonedas){
 
-        if (listadoMonedas != null && listadoMonedas.size() > 0){
+        if (listadoMonedas != null){
             this.listadoMonedas.clear();
             this.listadoMonedas.addAll(listadoMonedas);
             notifyDataSetChanged();

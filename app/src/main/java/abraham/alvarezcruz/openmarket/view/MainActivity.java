@@ -3,15 +3,21 @@ package abraham.alvarezcruz.openmarket.view;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.tabs.TabLayout;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import abraham.alvarezcruz.openmarket.R;
+import abraham.alvarezcruz.openmarket.adapter.TabsAdapter;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -33,16 +39,11 @@ public class MainActivity extends AppCompatActivity {
         // TODO Necesario para poder utilizar ciertas librerías
         AndroidThreeTen.init(this);
 
-        FragmentoListaMonedas fragmentoListaMoneda = new FragmentoListaMonedas();
-        escucharMonedaClickada(fragmentoListaMoneda.getMonedaClickeadaSubject());
-        escucharAperturaExchanges(fragmentoListaMoneda.getFabAperturaExchangesSubject());
+        initViews();
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.contenedorFragmentos, fragmentoListaMoneda)
-                .commit();
 
-        Runtime runtime = Runtime.getRuntime();
 
+        // Runtime runtime = Runtime.getRuntime();
         // Todo Solo descomentar cuando se quiera monitorizar la memoria disponible y usada por la aplicación
         /*
         Observable.interval(1, TimeUnit.SECONDS)
@@ -61,6 +62,46 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG_NAME, dispo + "\n" + usada);
                 });
         */
+    }
+
+    private void initViews(){
+
+        // Sobreescribiendo el método "onFragmentReady" conseguimos obtener un "subject" que será
+        // por el que escucharemos los clicks en una cierta moneda de la lista para mostrarla en detalle
+        TabsAdapter tabsAdapter = new TabsAdapter(fragmentManager, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, new FragmentViewPagerListener() {
+            @Override
+            public void onFragmentReady(ListadoMonedasListener listadoMonedasListener) {
+                // Cuando se clickee una moneda queremos recibir el evento para mostrar la moneda en detalle
+                escucharMonedaClickada(listadoMonedasListener.getMonedaClickeadaSubject());
+
+                // Si es el "FragmentoListaMonedas", también escucharemos el click del "FabAperturaExchange"
+                if (listadoMonedasListener instanceof FragmentoListaMonedas){
+                    FragmentoListaMonedas fragmentoListaMonedas = (FragmentoListaMonedas) listadoMonedasListener;
+                    escucharAperturaExchanges(fragmentoListaMonedas.getFabAperturaExchangesSubject());
+                }
+            }
+        });
+
+        // TabLayout que mostrará los labels: "Todas" y "Favoritas"
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.label_viewpager_todas)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.label_viewpager_favoritas)));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        // ViewPager que se encargará de cargar el fragmento correspondiente
+        final ViewPager viewPager =(ViewPager)findViewById(R.id.viewPager);
+        viewPager.setAdapter(tabsAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
     }
 
 

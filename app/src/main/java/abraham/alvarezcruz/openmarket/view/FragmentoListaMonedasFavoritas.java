@@ -29,12 +29,13 @@ import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import io.reactivex.subjects.PublishSubject;
 
-public class FragmentoListaMonedasFavoritas extends Fragment{
+public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoMonedasListener{
 
     public static String TAG_NAME = FragmentoListaMonedasFavoritas.class.getSimpleName();
 
     private View view;
     private AppCompatActivity mainActivity;
+    private Context context;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
 
@@ -53,8 +54,7 @@ public class FragmentoListaMonedasFavoritas extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_listado_favoritos, container, false);
 
-        // Inicializamos las vistas
-        initViews();
+        recyclerView = view.findViewById(R.id.recyclerListaMonedasFavoritas);
 
         // Cargamos el reycler view
         initRecyclerView();
@@ -65,23 +65,13 @@ public class FragmentoListaMonedasFavoritas extends Fragment{
         return view;
     }
 
-    private void initViews(){
-
-        toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
-        toolbar.setTitleTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        mainActivity.setSupportActionBar(toolbar);
-
-        recyclerView = view.findViewById(R.id.recyclerListaMonedas);
-    }
-
     private void initRecyclerView(){
 
         monedasAdapter = new MonedasAdapter();
 
         monedasAdapter.setOnMonedaClickeadaSubject(monedaClickeadaSubject);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),0));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(context,0));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.clearOnScrollListeners();
         recyclerView.setAdapter(monedasAdapter);
     }
@@ -100,17 +90,26 @@ public class FragmentoListaMonedasFavoritas extends Fragment{
 
         // Si no tenemos valores cacheados, realizaremos una petición
         if (listaMonedasFavoritasMutable.getValue().size() == 0){
-            monedasViewModel.recargarListadoMonedas();
+            monedasViewModel.recargarListadoMonedasFavoritas();
         }
     }
 
+    @Override
     public PublishSubject<Moneda> getMonedaClickeadaSubject() {
         return monedaClickeadaSubject;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        monedasViewModel.recargarListadoMonedasFavoritas();
+    }
+
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        this.context = context;
         this.mainActivity = (AppCompatActivity) context;
     }
 }

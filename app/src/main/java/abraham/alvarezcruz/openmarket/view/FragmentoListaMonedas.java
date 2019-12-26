@@ -31,7 +31,7 @@ import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
 import io.reactivex.subjects.PublishSubject;
 
-public class FragmentoListaMonedas extends Fragment implements View.OnClickListener {
+public class FragmentoListaMonedas extends Fragment implements View.OnClickListener, ListadoMonedasListener {
 
     public static String TAG_NAME = FragmentoListaMonedas.class.getSimpleName();
 
@@ -39,7 +39,6 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
     private AppCompatActivity mainActivity;
     private RecyclerView recyclerView;
     private transient FloatingActionButton fabExchanges;
-    private Toolbar toolbar;
 
     private MonedasAdapter monedasAdapter;
     private PublishSubject<Moneda> monedaClickeadaSubject;
@@ -73,11 +72,6 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
 
     private void initViews(){
 
-        toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
-        toolbar.setTitleTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        mainActivity.setSupportActionBar(toolbar);
-
         fabExchanges = view.findViewById(R.id.fabExchanges);
         fabExchanges.setOnClickListener(this);
 
@@ -87,8 +81,8 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
     private void initRecyclerView(){
 
         monedasAdapter = new MonedasAdapter();
-
         monedasAdapter.setOnMonedaClickeadaSubject(monedaClickeadaSubject);
+
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),0));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.clearOnScrollListeners();
