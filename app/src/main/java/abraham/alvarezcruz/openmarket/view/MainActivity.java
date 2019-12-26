@@ -1,25 +1,19 @@
 package abraham.alvarezcruz.openmarket.view;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
-import java.util.concurrent.TimeUnit;
-
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {

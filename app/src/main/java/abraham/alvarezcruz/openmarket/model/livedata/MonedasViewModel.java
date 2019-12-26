@@ -38,6 +38,7 @@ public class MonedasViewModel extends AndroidViewModel {
 
     private MutableLiveData<ArrayList<Moneda>> listadoMonedas;
     private MutableLiveData<ArrayList<String>> listadoIdsMonedasFavoritas;
+    private MutableLiveData<ArrayList<Moneda>> listadoMonedasFavoritas;
 
 
     public MonedasViewModel(@NonNull Application application) {
@@ -65,6 +66,10 @@ public class MonedasViewModel extends AndroidViewModel {
 
     public MutableLiveData<ArrayList<String>> getListadoIdsMonedasFavoritas(){
         return listadoIdsMonedasFavoritas;
+    }
+
+    public MutableLiveData<ArrayList<Moneda>> getListadoMonedasFavoritas(){
+        return listadoMonedasFavoritas;
     }
 
     @SuppressLint("CheckResult")
@@ -224,6 +229,80 @@ public class MonedasViewModel extends AndroidViewModel {
                 }
             }
         });
+    }
+
+    public void recargarListadoMonedasFavoritas(){
+
+        /*
+            Obtenemos la lista de monedas de internet y las seteamos a #listadoMonedas MEDIANTE "setValue()"
+            De esta forma evitamos que a los "observadores" se les avise de la actualización de la lista
+         */
+        Maybe<ArrayList<Moneda>> maybeListaMonedas = repositorioRemoto_Impl.obtenerDatosGeneralesTodasCriptomonedas(1,250);
+        maybeListaMonedas = maybeListaMonedas
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(listaDeMonedas -> {
+                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas");
+
+                    listadoMonedas.setValue(listaDeMonedas);
+                });
+
+        /*
+            De igual manera, obtenemos el listado de ids de aquellas monedas guardadas en favoritos MEDIANTE "setValue()"
+            De esta forma evitamos que a los "observadores" se les avise de la actualización de la lista
+         */
+        Maybe<List<String>> maybeListaIdsMonedasFavoritas = obtenerIdsTodasMonedasFavs();
+        maybeListaIdsMonedasFavoritas = maybeListaIdsMonedasFavoritas
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess((listaIdsMonedasFavs) -> {
+
+                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas favoritas");
+
+                    listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs));
+                });
+
+        /*
+            Esto puede parecer algo complejo, pero la idea es muy simple.
+            Mediante "merge()" conseguimos unificar a los dos "maybe" anteriores, así podremos ejecutar una
+            cierta acción SÓLO cuando ambas tareas se hallan completado.
+            En este caso, lo que haremos será:
+                1. Coger el "listadoMonedas" (ArrayList<Moneda) y crear un "HashMap<String, Moneda>" en el
+                que la clave sea el "idNombreMoneda", y como valor el propio objeto
+                2. Iterar sobre el "listadoIdsMonedasFavoritas" para ver los ids de todas las monedas favoritas
+                del usuario
+                3. Buscar en el HashMap del punto 1 aquellas monedas que tengan el "idNombreMoneda" de la iteración actual
+                4. Avisar de la actualización de los valores del "listadoMonedasFavoritas"
+         */
+        Maybe.merge(maybeListaIdsMonedasFavoritas, maybeListaMonedas)
+                .doAfterTerminate(() -> {
+
+                    HashMap<String, Moneda> idMonedaConSuObjeto = Observable.just(listadoMonedas.getValue())
+                            .flatMap(listaMonedas -> Observable.fromIterable(listaMonedas))
+                            .reduce(new HashMap<String, Moneda>(), (map, moneda) -> {
+                                map.put(moneda.getIdNombreMoneda(), moneda);
+                                return map;
+                            })
+                            .blockingGet();
+
+                    ArrayList<Moneda> monedasFavoritas = new ArrayList<>();
+
+                    // Recorremos los ids que hay en la lista de monedas favoritas
+                    for (String idMoneda : listadoIdsMonedasFavoritas.getValue()){
+
+                        // Obtenemos la moneda del listado de monedas y la establecemos como favorita
+                        if (idMonedaConSuObjeto.containsKey(idMoneda)){
+
+                            Moneda moneda = idMonedaConSuObjeto.get(idMoneda);
+                            moneda.setFavorita(true);
+                            monedasFavoritas.add(moneda);
+                        }
+                    }
+
+                    // Ahora si avisamos de la actualización de la lista de monedas, que ya incluye aquellas
+                    // que son favoritas
+                    listadoMonedasFavoritas.postValue(monedasFavoritas);
+                })
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
 
