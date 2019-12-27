@@ -25,6 +25,7 @@ import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.ExchangesAdapter;
 import abraham.alvarezcruz.openmarket.model.livedata.ExchangesViewModel;
 import abraham.alvarezcruz.openmarket.model.pojo.Exchange;
+import abraham.alvarezcruz.openmarket.utils.Utils;
 
 public class FragmentoListaExchanges extends Fragment {
 
@@ -38,6 +39,15 @@ public class FragmentoListaExchanges extends Fragment {
     private ExchangesAdapter exchangesAdapter;
     private ExchangesViewModel exchangesViewModel;
     private MutableLiveData<ArrayList<Exchange>> listaExchangesMutable;
+    private String modo;
+
+    public FragmentoListaExchanges(){
+        this(Utils.getModo());
+    }
+
+    public FragmentoListaExchanges(String modo){
+        this.modo = modo;
+    }
 
     @Nullable
     @Override
@@ -64,14 +74,18 @@ public class FragmentoListaExchanges extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         parent.setSupportActionBar(toolbar);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Manejamos nosotros mismos la salida
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+
+        // Dependiendo del layout que se muestre añadiremos el botón de navegación o no
+        if (modo != null && !modo.equals(getString(R.string.xlarge_port_tag))){
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Manejamos nosotros mismos la salida
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        }
     }
 
     private void initRecyclerView(){

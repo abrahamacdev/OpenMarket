@@ -5,7 +5,6 @@
     <dimen name="anchura_fab">56dp</dimen>
     <dimen name="margenes_fab">16dp</dimen>
 
-
     <!-- detalle_moneda.xml -->
     <dimen name="altura_framelayout_detalle_moneda">92dp</dimen>
     <dimen name="margenes_laterales_relative_detalle_moneda">8dp</dimen>
@@ -35,6 +34,7 @@
     <dimen name="padding_superior_contenedores_datos_grafica_moneda">10dp</dimen>
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
+    <dimen name="tamanio_texto_precios_grafica_grafica_moneda">10sp</dimen>
 
     <!-- detalle_exchange.xml -->
     <dimen name="altura_raiz_detalle_exchange">92dp</dimen>
@@ -46,5 +46,4 @@
     <dimen name="margen_izquierdo_imagen_exchange_detalle_exchange">12dp</dimen>
     <dimen name="padding_izquierdo_contenedor_datos_exchange">18dp</dimen>
     <dimen name="margen_derecho_contenedor_ranking">20dp</dimen>
-
 </resources>

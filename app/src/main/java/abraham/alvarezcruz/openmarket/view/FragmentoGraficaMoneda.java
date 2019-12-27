@@ -51,6 +51,7 @@ import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.internal.Util;
 
 public class FragmentoGraficaMoneda extends Fragment {
 
@@ -72,15 +73,24 @@ public class FragmentoGraficaMoneda extends Fragment {
 
     private RepositorioRemotoImpl repositorioRemoto_Impl;
     private MonedasViewModel monedasViewModel;
+    private String modo;
 
 
     public FragmentoGraficaMoneda(Moneda moneda){
+        this(moneda, Utils.getModo());
         this.moneda = moneda;
+    }
+
+    public FragmentoGraficaMoneda(Moneda moneda, String modo){
+        this.moneda = moneda;
+        this.modo = modo;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.e(TAG_NAME, "Modo -> " + modo);
 
         view = inflater.inflate(R.layout.activity_detalles_con_grafica_moneda, container, false);
         context = container.getContext();
@@ -103,15 +113,18 @@ public class FragmentoGraficaMoneda extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         parent.setSupportActionBar(toolbar);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Manejamos nosotros mismos la salida
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
 
+        // Dependiendo del layout que se muestre añadiremos el botón de navegación o no
+        if (modo != null && !modo.equals(getString(R.string.xlarge_port_tag))){
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Manejamos nosotros mismos la salida
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        }
 
         grafica = view.findViewById(R.id.grafica);
         animacion = view.findViewById(R.id.animacion_bitcoin);
@@ -268,10 +281,13 @@ public class FragmentoGraficaMoneda extends Fragment {
         int colorBlanco = ContextCompat.getColor(context, android.R.color.white);
         int colorLineaPrecios = ContextCompat.getColor(context, R.color.lineaPreciosGrafica);
 
+        float tamanioTextoGrafica = Utils.cargarTamanioLetra(R.dimen.tamanio_texto_precios_grafica_grafica_moneda, context);
+
         // Legenda del eje x
         XAxis xAxis = grafica.getXAxis();
         xAxis.setDrawGridLines(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(tamanioTextoGrafica);
         xAxis.setGranularity(1);
         xAxis.setTextColor(colorBlanco);
         xAxis.setValueFormatter(new ValueFormatter() {
@@ -302,6 +318,7 @@ public class FragmentoGraficaMoneda extends Fragment {
         yAxisLeft.setEnabled(true);
         yAxisLeft.setDrawGridLines(false);
         yAxisLeft.setTextColor(colorBlanco);
+        yAxisLeft.setTextSize(tamanioTextoGrafica);
         yAxisLeft.setAxisLineColor(ContextCompat.getColor(context, android.R.color.transparent));
 
         grafica.getLegend().setEnabled(false);
@@ -319,7 +336,7 @@ public class FragmentoGraficaMoneda extends Fragment {
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setColor(colorLineaPrecios);
         lineDataSet.setCircleColor(colorLineaPrecios);
-        lineDataSet.setValueTextSize(8);
+        lineDataSet.setValueTextSize(tamanioTextoGrafica);
         lineDataSet.setCircleHoleColor(colorLineaPrecios);
 
         final float primerValorDeLaGrafica = (float) ((double)valores.get(valores.size() - 1));
@@ -367,6 +384,7 @@ public class FragmentoGraficaMoneda extends Fragment {
         Drawable drawable = ContextCompat.getDrawable(context, idDrawable);
         menu.findItem(R.id.favorita).setIcon(drawable);
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

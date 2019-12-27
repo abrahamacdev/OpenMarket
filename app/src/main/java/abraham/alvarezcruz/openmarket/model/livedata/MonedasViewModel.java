@@ -176,6 +176,9 @@ public class MonedasViewModel extends AndroidViewModel {
 
                     if (id != -1){
                         moneda.setFavorita(true);
+                        ArrayList<Moneda> monedasFavs = listadoMonedasFavoritas.getValue();
+                        monedasFavs.add(moneda);
+                        listadoMonedasFavoritas.postValue(monedasFavs);
                         emitter.onSuccess(true);
                     }
                     else {

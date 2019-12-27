@@ -1,6 +1,8 @@
 package abraham.alvarezcruz.openmarket.utils;
 
+import android.content.Context;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.airbnb.lottie.L;
 
@@ -19,6 +21,7 @@ public class Utils {
 
     public static String TAG_NAME = Utils.class.getSimpleName();
     private static DecimalFormat df = obtenerFormateadorDeNotacionCientifica(2,8);
+    private static String modo = null;
 
     private static DecimalFormat obtenerFormateadorDeNotacionCientifica(int minimoDecimales, int maximoDecimales){
         DecimalFormat df = new DecimalFormat("#.##");
@@ -98,5 +101,20 @@ public class Utils {
         }
 
         return new StringBuilder(numeroConPuntos).reverse().toString();
+    }
+
+    public static float cargarTamanioLetra(int id, Context context) {
+        float scaleRatio = context.getResources().getDisplayMetrics().density;
+        float dimenPix = context.getResources().getDimension(id);
+
+        return dimenPix / scaleRatio;
+    }
+
+    public static String getModo() {
+        return modo;
+    }
+
+    public static void setModo(String modo) {
+        Utils.modo = modo;
     }
 }

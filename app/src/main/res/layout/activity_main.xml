@@ -4,12 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root">
+    android:id="@+id/root"
+    android:tag="@string/default_tag">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         app:tabTextColor="@android:color/white"

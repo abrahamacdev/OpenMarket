@@ -193,17 +193,5 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoM
                 onMonedaClickeadaSubject.onNext(moneda);
             }
         }
-
-        private int numeroDeLineasOcupadas(TextView textView){
-
-            String texto = String.valueOf(textView.getText());
-
-            final Rect bounds = new Rect();
-            final Paint paint = new Paint();
-            paint.setTextSize(textView.getTextSize());
-            paint.getTextBounds(texto, 0, texto.length(), bounds);
-
-            return (int) Math.ceil((float) bounds.width() / textView.getTextSize());
-        }
     }
 }

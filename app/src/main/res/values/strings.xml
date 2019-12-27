@@ -9,4 +9,7 @@
 
     <string name="label_viewpager_todas">Todas</string>
     <string name="label_viewpager_favoritas">Favoritas</string>
+
+    <string name="default_tag">normal</string>
+    <string name="xlarge_port_tag">xlarge_port_tag</string>
 </resources>

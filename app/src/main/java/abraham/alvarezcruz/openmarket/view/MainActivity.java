@@ -19,8 +19,10 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.TabsAdapter;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
+import abraham.alvarezcruz.openmarket.utils.Utils;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import okhttp3.internal.Util;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,12 +38,14 @@ public class MainActivity extends AppCompatActivity {
 
         view = findViewById(R.id.root);
 
+        // Guardamos la versión del layout que se está utilizando
+        Utils.setModo(String.valueOf(view.getTag()));
+
         // TODO Necesario para poder utilizar ciertas librerías
         AndroidThreeTen.init(this);
 
+        // Iniciamos las vistas
         initViews();
-
-
 
         // Runtime runtime = Runtime.getRuntime();
         // Todo Solo descomentar cuando se quiera monitorizar la memoria disponible y usada por la aplicación
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void mostrarFragmentoDetalleMoneda(Moneda moneda){
 
-        FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda);
+        FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda, Utils.getModo());
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoGraficaMoneda, FragmentoGraficaMoneda.TAG_NAME)
                 .addToBackStack(FragmentoGraficaMoneda.TAG_NAME)
