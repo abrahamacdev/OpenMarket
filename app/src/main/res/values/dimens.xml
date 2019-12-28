@@ -49,6 +49,7 @@
     <dimen name="ancho_imagen_exchange_detalle_exchange">48dp</dimen>
     <dimen name="alto_imagen_exchange_detalle_exchange">48dp</dimen>
     <dimen name="margen_izquierdo_imagen_exchange_detalle_exchange">12dp</dimen>
-    <dimen name="padding_izquierdo_contenedor_datos_exchange">18dp</dimen>
-    <dimen name="margen_derecho_contenedor_ranking">20dp</dimen>
+    <dimen name="padding_izquierdo_contenedor_datos_exchange_detalle_exchange">18dp</dimen>
+    <dimen name="margen_derecho_contenedor_ranking_detalle_exchange">20dp</dimen>
+    <dimen name="margen_izquierdo_datos_detalle_exchange">8dp</dimen>
 </resources>

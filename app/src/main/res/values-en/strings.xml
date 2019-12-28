@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="sigla_hora">h</string>
+    <string name="sigla_dia">d</string>
+
+    <!-- activity_detalles_con_grafica_moneda.xml -->
+    <string name="label_precio">Price (USD)</string>
+    <string name="label_volumen">Volume</string>
+    <string name="label_market_cap">Market Cap</string>
+    <string name="template_label_cambio1h" translatable="false">Change 1${sigla_hora}</string>
+    <string name="template_label_cambio24h" translatable="false">Change 24${sigla_hora}</string>
+    <string name="template_label_cambio7d" translatable="false">Change 7${sigla_dia}</string>
+
+    <!-- detalle_exchange -->
+    <string name="label_nombre">Name: </string>
+    <string name="label_pares_tradeos">Trade pairs: </string>
+    <string name="label_volumen_detalle_exchange">Volume: </string>
+    <string name="label_ranking">Ranking: </string>
+
+    <!-- activity_main.xml -->
+    <string name="label_viewpager_todas">All</string>
+    <string name="label_viewpager_favoritas">Favourites</string>
+
+</resources>

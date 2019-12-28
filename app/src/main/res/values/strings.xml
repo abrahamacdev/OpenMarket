@@ -1,17 +1,30 @@
-<resources>
-    <string name="app_name">OpenMarket</string>
-    <string name="action_settings">Settings</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">OpenMarket</string>
 
     <string name="sigla_hora">h</string>
     <string name="sigla_dia">d</string>
 
-    <string name="market_cap">Market Cap</string>
+    <!-- activity_detalles_con_grafica_moneda.xml -->
+    <string name="label_precio">Precio (USD)</string>
+    <string name="label_volumen">Volumen</string>
+    <string name="label_market_cap">Market Cap</string>
+    <string name="template_label_cambio1h" translatable="false">Cambio 1${sigla_hora}</string>
+    <string name="template_label_cambio24h" translatable="false">Cambio 24${sigla_hora}</string>
+    <string name="template_label_cambio7d" translatable="false">Cambio 7${sigla_dia}</string>
 
+    <!-- detalle_exchange -->
+    <string name="label_nombre">Nombre: </string>
+    <string name="label_pares_tradeos">Pares de tradeos: </string>
+    <string name="label_volumen_detalle_exchange">Volumen: </string>
+    <string name="label_ranking">Ranking: </string>
+
+    <!-- activity_main.xml -->
     <string name="label_viewpager_todas">Todas</string>
     <string name="label_viewpager_favoritas">Favoritas</string>
 
-    <string name="normal_land_tag">normal_land</string>
-    <string name="normal_port_tag">normal_port</string>
-    <string name="xlarge_port_tag">xlarge_port</string>
-    <string name="xlarge_land_tag">xlarge_land</string>
+    <!-- Tags -->
+    <string name="normal_land_tag" translatable="false">normal_land</string>
+    <string name="normal_port_tag" translatable="false">normal_port</string>
+    <string name="xlarge_port_tag" translatable="false">xlarge_port</string>
+    <string name="xlarge_land_tag" translatable="false">xlarge_land</string>
 </resources>

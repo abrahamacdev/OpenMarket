@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/imagenExchange"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_izquierdo_contenedor_datos_exchange"
+            android:paddingLeft="@dimen/padding_izquierdo_contenedor_datos_exchange_detalle_exchange"
             android:weightSum="3">
 
             <RelativeLayout
@@ -37,9 +37,9 @@
                     android:id="@+id/labelNombreExchange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:text="Nombre: "/>
+                    android:text="@string/label_nombre"
+                    android:textColor="@android:color/white" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/nombreExchange"
@@ -47,6 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
+                    android:layout_marginLeft="@dimen/margen_izquierdo_datos_detalle_exchange"
                     android:layout_centerVertical="true"
                     android:text="Kraken"/>
 
@@ -68,9 +69,9 @@
                         android:id="@+id/labelVolumenExchange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
                         android:layout_centerVertical="true"
-                        android:text="Volumen: "/>
+                        android:text="@string/label_volumen_detalle_exchange"
+                        android:textColor="@android:color/white" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/volumenExchange"
@@ -78,6 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
+                        android:layout_marginLeft="@dimen/margen_izquierdo_datos_detalle_exchange"
                         android:layout_centerVertical="true"
                         android:text="423423.425453 USD"/>
 
@@ -88,7 +90,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="end|center_vertical"
-                    android:layout_marginRight="@dimen/margen_derecho_contenedor_ranking">
+                    android:layout_marginRight="@dimen/margen_derecho_contenedor_ranking_detalle_exchange">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labelRankingExchange"
@@ -104,6 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
+                        android:layout_marginLeft="@dimen/margen_izquierdo_datos_detalle_exchange"
                         android:layout_centerVertical="true"
                         android:text="1"/>
 
@@ -121,9 +124,9 @@
                     android:id="@+id/labelParesTradeosExchange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:text="Pares de tradeos: "/>
+                    android:text="@string/label_pares_tradeos"
+                    android:textColor="@android:color/white" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/paresTradeosExchange"
@@ -131,6 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
+                    android:layout_marginLeft="@dimen/margen_izquierdo_datos_detalle_exchange"
                     android:layout_centerVertical="true"
                     android:text="52"/>
 

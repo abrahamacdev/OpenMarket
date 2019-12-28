@@ -117,7 +117,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_above="@+id/separadorPreciosMonedaGraficaMoneda"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="Precio (USD)"
+                                android:text="@string/label_precio"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
@@ -156,7 +156,7 @@
                                 android:layout_above="@+id/separadorVolumenMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="Volumen"
+                                android:text="@string/label_volumen"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
@@ -197,7 +197,7 @@
                                 android:layout_above="@+id/separadorMarketCapMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="@string/market_cap"
+                                android:text="@string/label_market_cap"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
@@ -256,7 +256,7 @@
                                 android:layout_above="@+id/separadorCambio1hMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="Cambio 1h"
+                                android:text="@string/label_cambio1h"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
@@ -296,7 +296,7 @@
                                 android:layout_above="@+id/separadorCambio24hMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="Cambio 24h"
+                                android:text="@string/label_cambio24h"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
@@ -335,7 +335,7 @@
                                 android:layout_above="@+id/separadorCambio7dMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:text="Cambio 7d"
+                                android:text="@string/label_cambio7d"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
