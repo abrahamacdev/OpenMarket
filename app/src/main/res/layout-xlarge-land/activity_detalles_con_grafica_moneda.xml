@@ -21,10 +21,10 @@
         <LinearLayout
             android:id="@+id/contenedorPrincipalGraficaMoneda"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/alto_contenedor_principal_grafica_moneda"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             android:layout_below="@+id/contenedorToolbar"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                     android:id="@+id/grafica"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/animacion_bitcoin"
@@ -43,63 +43,66 @@
                     android:layout_height="@dimen/alto_animacion_carga_grafica"
                     android:layout_centerInParent="true"
                     app:lottie_autoPlay="true"
-                    app:lottie_rawRes="@raw/sheep_running"
+                    app:lottie_loop="true"
                     app:lottie_progress="20"
-                    app:lottie_loop="true" />
+                    app:lottie_rawRes="@raw/sheep_running" />
 
             </RelativeLayout>
 
             <!-- Datos debajo de la gráfica (Imagen, nombre, precios, cambios...etc) -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/padding_inferior_datos_detalle_grafica_moneda">
+                android:layout_height="match_parent">
 
                 <!-- Imagen Moneda -->
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imagenMonedaGraficaMoneda"
                     android:layout_width="@dimen/tamanio_imagen_criptomoneda_grafica_moneda"
                     android:layout_height="@dimen/tamanio_imagen_criptomoneda_grafica_moneda"
-                    android:layout_marginTop="@dimen/margen_superior_imagen_criptomoneda_grafica_moneda"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margen_superior_imagen_criptomoneda_grafica_moneda" />
 
                 <!-- Nombre moneda -->
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textoNombreCriptomonedaGraficaMoneda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="Bitcoin (BTC)"
                     android:layout_below="@id/imagenMonedaGraficaMoneda"
                     android:layout_marginTop="@dimen/margen_superior_texto_nombre_criptomoneda_grafica_moneda"
+                    android:text="Bitcoin (BTC)"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/tamanio_texto_nombre_criptomoneda_grafica_moneda"/>
+                    android:textSize="@dimen/tamanio_texto_nombre_criptomoneda_grafica_moneda" />
 
                 <!-- Datos económicos de la moneda -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_below="@id/textoNombreCriptomonedaGraficaMoneda"
                     android:layout_marginTop="@dimen/margen_superior_contenedor_datos_economicos_detalle_moneda"
-                    android:weightSum="2"
-                    android:layout_below="@id/textoNombreCriptomonedaGraficaMoneda">
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
 
                     <!-- Precios, Volumen y MarketCap -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
+                        android:layout_marginRight="@dimen/margenes_interiores_contenedores_datos_grafica_moneda"
+                        android:layout_marginBottom="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
                         android:layout_weight="1"
                         android:background="@color/colorPrimaryDark"
-                        android:layout_marginRight="@dimen/margenes_interiores_contenedores_datos_grafica_moneda"
-                        android:layout_marginLeft="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
-                        android:layout_marginBottom="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
-                        android:layout_marginTop="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
+                        android:orientation="vertical"
                         android:paddingLeft="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
-                        android:paddingRight="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
                         android:paddingTop="@dimen/padding_superior_contenedores_datos_grafica_moneda"
+                        android:paddingRight="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
                         android:paddingBottom="@dimen/padding_superior_contenedores_datos_grafica_moneda"
-                        android:weightSum="3"
-                        android:orientation="vertical">
+                        android:weightSum="3">
 
                         <!-- Precio -->
                         <RelativeLayout
@@ -112,31 +115,31 @@
                                 android:id="@+id/labelPrecioActualUSDGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@android:color/white"
-                                android:text="Precio (USD)"
                                 android:layout_above="@+id/separadorPreciosMonedaGraficaMoneda"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:text="Precio (USD)"
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorPreciosMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/precioActualUSDGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@android:color/white"
-                                android:text="8.000$"
                                 android:layout_below="@+id/separadorPreciosMonedaGraficaMoneda"
                                 android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
+                                android:text="8.000$"
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
                                 android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"
                                 android:textStyle="bold"
-                                android:typeface="serif"/>
+                                android:typeface="serif" />
                         </RelativeLayout>
 
                         <!-- Volumen -->
@@ -156,27 +159,27 @@
                                 android:text="Volumen"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorVolumenMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/volumen24hGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/separadorVolumenMonedaGraficaMoneda"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
+                                android:text="15.129.894.912,00$"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
-                                android:text="15.129.894.912,00$"
-                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
-                                android:layout_below="@+id/separadorVolumenMonedaGraficaMoneda"
-                                android:typeface="serif"
-                                android:textStyle="bold"
                                 android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"
-                                android:layout_centerHorizontal="true"/>
+                                android:textStyle="bold"
+                                android:typeface="serif" />
 
                         </RelativeLayout>
 
@@ -191,33 +194,33 @@
                                 android:id="@+id/labelMarketCapGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_above="@+id/separadorMarketCapMonedaGraficaMoneda"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
+                                android:text="@string/market_cap"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
-                                android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:layout_centerHorizontal="true"
-                                android:layout_above="@+id/separadorMarketCapMonedaGraficaMoneda"
-                                android:text="@string/market_cap"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorMarketCapMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/marketCapGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@id/separadorMarketCapMonedaGraficaMoneda"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
+                                android:text="136.954.854.937,00$"
                                 android:textAlignment="center"
                                 android:textColor="@android:color/white"
-                                android:text="136.954.854.937,00$"
-                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
-                                android:layout_below="@id/separadorMarketCapMonedaGraficaMoneda"
                                 android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"
                                 android:textStyle="bold"
-                                android:typeface="serif"
-                                android:layout_centerHorizontal="true"/>
+                                android:typeface="serif" />
 
                         </RelativeLayout>
                     </LinearLayout>
@@ -226,18 +229,18 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margenes_interiores_contenedores_datos_grafica_moneda"
+                        android:layout_marginTop="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
+                        android:layout_marginRight="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
+                        android:layout_marginBottom="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
                         android:layout_weight="1"
                         android:background="@color/colorPrimaryDark"
-                        android:layout_marginLeft="@dimen/margenes_interiores_contenedores_datos_grafica_moneda"
-                        android:layout_marginBottom="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
-                        android:layout_marginRight="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
-                        android:layout_marginTop="@dimen/margenes_exteriores_contenedores_datos_grafica_moneda"
+                        android:orientation="vertical"
                         android:paddingLeft="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
-                        android:paddingRight="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
                         android:paddingTop="@dimen/padding_superior_contenedores_datos_grafica_moneda"
+                        android:paddingRight="@dimen/padding_lateral_contenedores_datos_grafica_moneda"
                         android:paddingBottom="@dimen/padding_superior_contenedores_datos_grafica_moneda"
-                        android:weightSum="3"
-                        android:orientation="vertical">
+                        android:weightSum="3">
 
                         <!-- Cambio 1h -->
                         <RelativeLayout
@@ -250,32 +253,32 @@
                                 android:id="@+id/labelCambio1hGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@android:color/white"
+                                android:layout_above="@+id/separadorCambio1hMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                                 android:text="Cambio 1h"
-                                android:layout_above="@+id/separadorCambio1hMonedaGraficaMoneda"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorCambio1hMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/cambio1hGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorGreen"
-                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
+                                android:layout_below="@+id/separadorCambio1hMonedaGraficaMoneda"
                                 android:layout_alignParentBottom="true"
                                 android:layout_centerHorizontal="true"
-                                android:layout_below="@+id/separadorCambio1hMonedaGraficaMoneda"
+                                android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                                 android:text="5.7%"
-                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@color/colorGreen"
+                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda" />
 
                         </RelativeLayout>
 
@@ -290,31 +293,31 @@
                                 android:id="@+id/labelCambio24hGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@android:color/white"
+                                android:layout_above="@+id/separadorCambio24hMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:layout_above="@+id/separadorCambio24hMonedaGraficaMoneda"
                                 android:text="Cambio 24h"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorCambio24hMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/cambio24hGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorAccent"
                                 android:layout_below="@id/separadorCambio24hMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                                 android:text="-5.43%"
-                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda" />
 
                         </RelativeLayout>
 
@@ -329,31 +332,32 @@
                                 android:id="@+id/labelCambio7dGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@android:color/white"
+                                android:layout_above="@+id/separadorCambio7dMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
-                                android:layout_above="@+id/separadorCambio7dMonedaGraficaMoneda"
                                 android:text="Cambio 7d"
-                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda" />
 
                             <View
                                 android:id="@+id/separadorCambio7dMonedaGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/cambio7dGraficaMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorGreen"
                                 android:layout_below="@+id/separadorCambio7dMonedaGraficaMoneda"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                                 android:text="20.0%"
-                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
+                                android:textAlignment="center"
+                                android:textColor="@color/colorGreen"
+                                android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda" />
+
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>

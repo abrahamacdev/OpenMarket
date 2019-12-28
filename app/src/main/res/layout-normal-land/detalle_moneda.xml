@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="@dimen/altura_framelayout_detalle_moneda"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margen_superior_relative_detalle_moneda"
+        android:layout_marginRight="@dimen/margenes_laterales_relative_detalle_moneda"
+        android:layout_marginLeft="@dimen/margenes_laterales_relative_detalle_moneda"
+        android:layout_marginBottom="@dimen/margen_inferior_relative_detalle_moneda">
+
+        <RelativeLayout
+            android:id="@+id/contenedorDatosGenerales"
+            android:layout_width="@dimen/ancho_contenedor_datos_generales_detalle_moneda"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imagenCriptomoneda"
+                android:layout_width="@dimen/ancho_imagen_criptomoneda_detalle_moneda"
+                android:layout_height="@dimen/altura_imagen_criptomoneda_detalle_moneda"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margen_izquierdo_imagen_criptomoneda_detalle_moneda" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textoNombreCriptomoneda"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/imagenCriptomoneda"
+                android:text="Bitcoin"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/tamanio_texto_nombre_criptomoneda_detalle_moneda" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/contenedorDatosGenerales">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textoPrecioCriptomoneda"
+                android:layout_width="@dimen/ancho_texto_precio_criptomoneda_detalle_moneda"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="8.000$"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/tamanio_texto_precio_criptomoneda_detalle_moneda"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/textoPrecioCriptomoneda">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textoPorcentajeCambio1horaCriptomoneda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/separadorCambiosCriptomoneda"
+                    android:layout_marginRight="@dimen/margen_derecho_cambios_1h_24h_detalle_moneda"
+                    android:layout_marginBottom="@dimen/margen_superior_inferior_cambios_1h_24h_detalle_moneda"
+                    android:text="-3,5% (1hr)"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/tamanio_texto_cambios_1h_24h_detalle_moneda" />
+
+                <View
+                    android:id="@+id/separadorCambiosCriptomoneda"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerVertical="true" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textoPorcentajeCambio24horaCriptomoneda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/separadorCambiosCriptomoneda"
+                    android:layout_marginTop="@dimen/margen_superior_inferior_cambios_1h_24h_detalle_moneda"
+                    android:layout_marginRight="@dimen/margen_derecho_cambios_1h_24h_detalle_moneda"
+                    android:text="+45,23% (24hr)"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorGreen"
+                    android:textSize="@dimen/tamanio_texto_cambios_1h_24h_detalle_moneda" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

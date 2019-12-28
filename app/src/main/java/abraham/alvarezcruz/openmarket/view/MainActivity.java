@@ -1,11 +1,14 @@
 package abraham.alvarezcruz.openmarket.view;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG_NAME = MainActivity.class.getSimpleName();
 
     private View view;
-    private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,33 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Iniciamos las vistas
         initViews();
-
-        // Runtime runtime = Runtime.getRuntime();
-        // Todo Solo descomentar cuando se quiera monitorizar la memoria disponible y usada por la aplicación
-        /*
-        Observable.interval(1, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.computation())
-                .subscribe((tick) -> {
-
-                    ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-                    ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-                    activityManager.getMemoryInfo(mi);
-                    double availableMegs = mi.availMem / 0x100000L;
-                    final long usedMemInMB=(runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
-
-                    String dispo = "Disponible -> " + availableMegs + "Mb";
-                    String usada = "Usada -> " + usedMemInMB + "Mb";
-
-                    Log.e(TAG_NAME, dispo + "\n" + usada);
-                });
-        */
     }
 
     private void initViews(){
 
         // Sobreescribiendo el método "onFragmentReady" conseguimos obtener un "subject" que será
         // por el que escucharemos los clicks en una cierta moneda de la lista para mostrarla en detalle
-        TabsAdapter tabsAdapter = new TabsAdapter(fragmentManager, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, new FragmentViewPagerListener() {
+        TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, new FragmentViewPagerListener() {
             @Override
             public void onFragmentReady(ListadoMonedasListener listadoMonedasListener) {
                 // Cuando se clickee una moneda queremos recibir el evento para mostrar la moneda en detalle
@@ -146,8 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void mostrarFragmentoDetalleMoneda(Moneda moneda){
 
-        FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda(moneda, Utils.getModo());
-        fragmentManager.beginTransaction()
+        FragmentoGraficaMoneda fragmentoGraficaMoneda = new FragmentoGraficaMoneda();
+        Bundle extras = new Bundle();
+        extras.putSerializable("moneda", moneda);
+        fragmentoGraficaMoneda.setArguments(extras);
+
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoGraficaMoneda, FragmentoGraficaMoneda.TAG_NAME)
                 .addToBackStack(FragmentoGraficaMoneda.TAG_NAME)
                 .commit();
@@ -156,13 +142,11 @@ public class MainActivity extends AppCompatActivity {
     private void mostrarFragmentoExchanges(){
 
         FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges();
-        fragmentManager.beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaExchanges, FragmentoListaExchanges.TAG_NAME)
                 .addToBackStack(FragmentoListaExchanges.TAG_NAME)
                 .commit();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

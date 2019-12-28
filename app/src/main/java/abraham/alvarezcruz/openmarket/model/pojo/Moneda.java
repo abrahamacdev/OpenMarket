@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import abraham.alvarezcruz.openmarket.model.repository.local.FavoritosContract;
@@ -14,7 +15,7 @@ import abraham.alvarezcruz.openmarket.model.repository.local.FavoritosContract;
 @Entity(tableName = FavoritosContract.FavoritosEntry.TABLE_NAME, indices =
         {@Index(value = {FavoritosContract.FavoritosEntry._ID, FavoritosContract.FavoritosEntry.COLUMNA_ID_CRIPTOMONEDA},
         unique = true)})
-public class Moneda {
+public class Moneda implements Serializable {
 
     // En la práctica, no tendra ningún uso
     @PrimaryKey(autoGenerate = true)

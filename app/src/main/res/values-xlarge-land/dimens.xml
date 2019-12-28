@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- activity_detalles_con_grafica_moneda.xml -->
+    <dimen name="alto_grafica_moneda">412dp</dimen>
+    <dimen name="tamanio_imagen_criptomoneda_grafica_moneda">72dp</dimen>
+    <dimen name="alto_animacion_carga_grafica" tools:ignore="MissingDefaultResource">254dp</dimen>
+    <dimen name="ancho_animacion_carga_grafica" tools:ignore="MissingDefaultResource">254dp</dimen>
+    <dimen name="margenes_interiores_contenedores_datos_grafica_moneda">8dp</dimen>
+    <dimen name="margenes_exteriores_contenedores_datos_grafica_moneda">4dp</dimen>
+    <dimen name="tamanio_texto_nombre_criptomoneda_grafica_moneda">34sp</dimen>
+    <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">14sp</dimen>
+    <dimen name="tamanio_textos_grandes_datos_grafica_moneda">18sp</dimen>
+    <dimen name="tamanio_texto_precios_grafica_grafica_moneda">14sp</dimen>
+    <dimen name="margen_superior_contenedor_datos_economicos_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="margen_superior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">2dp</dimen>
+    <dimen name="margen_inferior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">2dp</dimen>
+
+    <!-- detalle_moneda.xml -->
+    <dimen name="margenes_laterales_relative_detalle_moneda">8dp</dimen>
+    <dimen name="ancho_contenedor_datos_generales_detalle_moneda">312dp</dimen>
+    <dimen name="ancho_imagen_criptomoneda_detalle_moneda">56dp</dimen>
+    <dimen name="altura_imagen_criptomoneda_detalle_moneda">56dp</dimen>
+    <dimen name="margen_izquierdo_imagen_criptomoneda_detalle_moneda">36dp</dimen>
+    <dimen name="tamanio_texto_nombre_criptomoneda_detalle_moneda">24sp</dimen>
+    <dimen name="tamanio_texto_precio_criptomoneda_detalle_moneda">22sp</dimen>
+    <dimen name="tamanio_texto_cambios_1h_24h_detalle_moneda">18sp</dimen>
+
+</resources>

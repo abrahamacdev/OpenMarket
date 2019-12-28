@@ -1,7 +1,6 @@
 package abraham.alvarezcruz.openmarket.model.repository.dao;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 

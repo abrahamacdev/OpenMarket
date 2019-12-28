@@ -16,6 +16,7 @@
         android:background="@color/colorPrimaryLessDark"
         android:orientation="vertical">
 
+        <!-- Grafica y animación de carga -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/alto_grafica_moneda">
@@ -27,10 +28,11 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
+            <!-- Animación de carga -->
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animacion_bitcoin"
-                android:layout_width="156dp"
-                android:layout_height="156dp"
+                android:layout_width="@dimen/tamanio_animacion_detalle_moneda"
+                android:layout_height="@dimen/tamanio_animacion_detalle_moneda"
                 android:layout_centerInParent="true"
                 app:lottie_autoPlay="true"
                 app:lottie_rawRes="@raw/sheep_running"
@@ -69,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margen_superior_contenedor_datos_economicos_detalle_moneda"
                 android:weightSum="2"
                 android:layout_below="@id/textoNombreCriptomonedaGraficaMoneda">
 
@@ -105,7 +107,7 @@
                             android:textColor="@android:color/white"
                             android:text="Precio (USD)"
                             android:layout_alignParentTop="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
 
 
@@ -117,7 +119,7 @@
                             android:textColor="@android:color/white"
                             android:text="8.000$"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"
                             android:textStyle="bold"
                             android:typeface="serif"/>
@@ -137,7 +139,7 @@
                             android:layout_above="@+id/volumen24hGraficaMoneda"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:text="Volumen"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
@@ -150,7 +152,7 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:text="15.129.894.912,00$"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:layout_alignParentBottom="true"
                             android:typeface="serif"
                             android:textStyle="bold"
@@ -172,7 +174,7 @@
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:layout_centerHorizontal="true"
                             android:text="@string/market_cap"
                             android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
@@ -184,7 +186,7 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:text="136.954.854.937,00$"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:layout_alignParentBottom="true"
                             android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"
                             android:textStyle="bold"
@@ -225,7 +227,7 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:text="Cambio 1h"
                             android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
 
@@ -235,7 +237,7 @@
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:textColor="@color/colorGreen"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:text="5.7%"
@@ -257,7 +259,7 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:text="Cambio 24h"
                             android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
 
@@ -269,7 +271,7 @@
                             android:textColor="@color/colorAccent"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:text="-5.43%"
                             android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
 
@@ -289,7 +291,7 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margen_superior_labels_detalle_moneda"
                             android:text="Cambio 7d"
                             android:textSize="@dimen/tamanio_textos_grandes_datos_grafica_moneda"/>
 
@@ -301,15 +303,12 @@
                             android:textColor="@color/colorGreen"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="@dimen/margen_inferior_labels_detalle_moneda"
                             android:text="20.0%"
                             android:textSize="@dimen/tamanio_textos_pequenios_datos_grafica_moneda"/>
 
                     </RelativeLayout>
-
-
                 </LinearLayout>
-
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- activity_detalles_con_grafica_moneda.xml -->
+    <dimen name="ancho_imagen_criptomoneda_detalle_moneda">56dp</dimen>
+    <dimen name="altura_imagen_criptomoneda_detalle_moneda">56dp</dimen>
+    <dimen name="ancho_contenedor_datos_generales_detalle_moneda">232dp</dimen>
+    <dimen name="tamanio_texto_nombre_criptomoneda_detalle_moneda">20sp</dimen>
+    <dimen name="ancho_texto_precio_criptomoneda_detalle_moneda">184dp</dimen>
+    <dimen name="tamanio_texto_precio_criptomoneda_detalle_moneda">18sp</dimen>
+    <dimen name="tamanio_texto_cambios_1h_24h_detalle_moneda">14sp</dimen>
+    <dimen name="tamanio_animacion_detalle_moneda" tools:ignore="MissingDefaultResource">156dp</dimen>
+    <dimen name="margen_superior_contenedor_datos_economicos_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="margen_superior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="margen_inferior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">4dp</dimen>
+
+</resources>

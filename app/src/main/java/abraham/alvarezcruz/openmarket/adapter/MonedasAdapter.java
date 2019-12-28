@@ -1,13 +1,10 @@
 package abraham.alvarezcruz.openmarket.adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -189,7 +186,11 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoM
 
         @Override
         public void onClick(View v) {
+
             if (onMonedaClickeadaSubject != null){
+
+                Log.e(TAG_NAME, "Transmitimos el click a: " + onMonedaClickeadaSubject);
+
                 onMonedaClickeadaSubject.onNext(moneda);
             }
         }

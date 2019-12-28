@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/root"
-    android:tag="@string/default_tag">
+    android:tag="@string/normal_port_tag">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

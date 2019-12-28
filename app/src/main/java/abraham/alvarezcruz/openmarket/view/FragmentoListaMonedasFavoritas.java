@@ -2,6 +2,7 @@ package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +41,14 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
     private Toolbar toolbar;
 
     private MonedasAdapter monedasAdapter;
-    private PublishSubject<Moneda> monedaClickeadaSubject;
+    private static PublishSubject<Moneda> monedaClickeadaSubject;
     private MutableLiveData<ArrayList<Moneda>> listaMonedasFavoritasMutable;
     private MonedasViewModel monedasViewModel;
 
     public FragmentoListaMonedasFavoritas(){
-        monedaClickeadaSubject = PublishSubject.create();
+        if (monedaClickeadaSubject == null){
+            monedaClickeadaSubject = PublishSubject.create();
+        }
     }
 
 
@@ -53,6 +56,8 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_listado_favoritos, container, false);
+
+        Log.e(TAG_NAME,"Nuestro subject es: " + monedaClickeadaSubject);
 
         recyclerView = view.findViewById(R.id.recyclerListaMonedasFavoritas);
 

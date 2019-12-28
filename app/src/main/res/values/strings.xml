@@ -10,6 +10,8 @@
     <string name="label_viewpager_todas">Todas</string>
     <string name="label_viewpager_favoritas">Favoritas</string>
 
-    <string name="default_tag">normal</string>
-    <string name="xlarge_port_tag">xlarge_port_tag</string>
+    <string name="normal_land_tag">normal_land</string>
+    <string name="normal_port_tag">normal_port</string>
+    <string name="xlarge_port_tag">xlarge_port</string>
+    <string name="xlarge_land_tag">xlarge_land</string>
 </resources>

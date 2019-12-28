@@ -41,15 +41,21 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
     private transient FloatingActionButton fabExchanges;
 
     private MonedasAdapter monedasAdapter;
-    private PublishSubject<Moneda> monedaClickeadaSubject;
-    private PublishSubject<View> fabAperturaExchangesSubject;
+    private static PublishSubject<Moneda> monedaClickeadaSubject;
+    private static PublishSubject<View> fabAperturaExchangesSubject;
     private MutableLiveData<ArrayList<Moneda>> listaMonedasMutable;
     private MutableLiveData<ArrayList<String>> listaIdsMonedasFavoritas;
     private MonedasViewModel monedasViewModel;
 
     public FragmentoListaMonedas(){
-        monedaClickeadaSubject = PublishSubject.create();
-        fabAperturaExchangesSubject = PublishSubject.create();
+
+        if (monedaClickeadaSubject == null){
+            monedaClickeadaSubject = PublishSubject.create();
+        }
+
+        if (fabAperturaExchangesSubject == null){
+            fabAperturaExchangesSubject = PublishSubject.create();
+        }
     }
 
 

@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import abraham.alvarezcruz.openmarket.R;
+
 public class Utils {
 
     public static String TAG_NAME = Utils.class.getSimpleName();
@@ -108,6 +110,10 @@ public class Utils {
         float dimenPix = context.getResources().getDimension(id);
 
         return dimenPix / scaleRatio;
+    }
+
+    public static boolean esTablet(Context context){
+        return modo.equals(context.getString(R.string.xlarge_port_tag)) || modo.equals(context.getString(R.string.xlarge_land_tag));
     }
 
     public static String getModo() {

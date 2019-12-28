@@ -68,36 +68,30 @@ public class FragmentoGraficaMoneda extends Fragment {
     private AppCompatActivity parent;
     private Context context;
     private LineChart grafica;
-    private LinearLayout contenedorPrincipalGraficaMoneda;
     private Menu menu;
 
     private RepositorioRemotoImpl repositorioRemoto_Impl;
     private MonedasViewModel monedasViewModel;
-    private String modo;
 
 
-    public FragmentoGraficaMoneda(Moneda moneda){
-        this(moneda, Utils.getModo());
-        this.moneda = moneda;
-    }
-
-    public FragmentoGraficaMoneda(Moneda moneda, String modo){
-        this.moneda = moneda;
-        this.modo = modo;
-    }
+    public FragmentoGraficaMoneda(){}
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.e(TAG_NAME, "Modo -> " + modo);
-
         view = inflater.inflate(R.layout.activity_detalles_con_grafica_moneda, container, false);
         context = container.getContext();
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        Log.e(TAG_NAME,"El tag seteado es: " + Utils.getModo());
 
         // Utilizaremos este view model para guardar la moneda en la base de datos
         monedasViewModel = ViewModelProviders.of(parent).get(MonedasViewModel.class);
+
+        // Obtenemos los valores pasados por el intent
+        obtenerValoresIntent(savedInstanceState);
 
         // Inicializamos las vistas
         initViews();
@@ -108,6 +102,27 @@ public class FragmentoGraficaMoneda extends Fragment {
         return view;
     }
 
+    private void obtenerValoresIntent(Bundle savedInstance){
+
+        // No se ha rotado la pantalla
+        if (savedInstance == null){
+
+            Bundle bundle = getArguments();
+
+            if (bundle.containsKey("moneda")){
+                moneda = (Moneda) bundle.get("moneda");
+            }
+        }
+
+        // Hubo rotacióon de pantalla
+        else {
+
+            if (savedInstance.containsKey("moneda")){
+                moneda = (Moneda) savedInstance.get("moneda");
+            }
+        }
+    }
+
     private void initViews(){
 
         toolbar = view.findViewById(R.id.toolbar);
@@ -115,7 +130,7 @@ public class FragmentoGraficaMoneda extends Fragment {
         toolbar.setTitle("");
 
         // Dependiendo del layout que se muestre añadiremos el botón de navegación o no
-        if (modo != null && !modo.equals(getString(R.string.xlarge_port_tag))){
+        if (!Utils.esTablet(getContext())){
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,8 +144,6 @@ public class FragmentoGraficaMoneda extends Fragment {
         grafica = view.findViewById(R.id.grafica);
         animacion = view.findViewById(R.id.animacion_bitcoin);
         animacion.setMaxFrame(120);
-
-        contenedorPrincipalGraficaMoneda = view.findViewById(R.id.contenedorPrincipalGraficaMoneda);
 
         imagenCriptomoneda = view.findViewById(R.id.imagenMonedaGraficaMoneda);
         Picasso.get()
@@ -385,6 +398,13 @@ public class FragmentoGraficaMoneda extends Fragment {
         menu.findItem(R.id.favorita).setIcon(drawable);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardamos la moneda
+        outState.putSerializable("moneda", moneda);
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

@@ -11,6 +11,10 @@
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">18sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">22sp</dimen>
     <dimen name="tamanio_texto_precios_grafica_grafica_moneda">14sp</dimen>
+    <dimen name="padding_inferior_datos_detalle_grafica_moneda" tools:ignore="MissingDefaultResource">64dp</dimen>
+    <dimen name="margen_superior_contenedor_datos_economicos_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="margen_superior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="margen_inferior_labels_detalle_moneda" tools:ignore="MissingDefaultResource">8dp</dimen>
 
     <!-- detalle_moneda.xml -->
     <dimen name="tamanio_texto_precio_criptomoneda_detalle_moneda">16sp</dimen>

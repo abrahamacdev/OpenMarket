@@ -15,5 +15,4 @@ public class FavoritosContract {
         public final static String _ID = BaseColumns._ID;
         public final static String COLUMNA_ID_CRIPTOMONEDA = "idMoneda";
     }
-
 }

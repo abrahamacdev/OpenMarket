@@ -20,6 +20,7 @@
     <dimen name="ancho_texto_precio_criptomoneda_detalle_moneda">120dp</dimen>
     <dimen name="margen_superior_inferior_cambios_1h_24h_detalle_moneda">2dp</dimen>
     <dimen name="tamanio_texto_cambios_1h_24h_detalle_moneda">12sp</dimen>
+
     <dimen name="margen_derecho_cambios_1h_24h_detalle_moneda">8dp</dimen>
 
     <!-- activity_detalles_con_grafica_moneda.xml -->
@@ -35,6 +36,10 @@
     <dimen name="tamanio_textos_pequenios_datos_grafica_moneda">12sp</dimen>
     <dimen name="tamanio_textos_grandes_datos_grafica_moneda">14sp</dimen>
     <dimen name="tamanio_texto_precios_grafica_grafica_moneda">10sp</dimen>
+    <dimen name="tamanio_animacion_detalle_moneda">156dp</dimen>
+    <dimen name="margen_superior_contenedor_datos_economicos_detalle_moneda">8dp</dimen>
+    <dimen name="margen_superior_labels_detalle_moneda">8dp</dimen>
+    <dimen name="margen_inferior_labels_detalle_moneda">4dp</dimen>
 
     <!-- detalle_exchange.xml -->
     <dimen name="altura_raiz_detalle_exchange">92dp</dimen>
