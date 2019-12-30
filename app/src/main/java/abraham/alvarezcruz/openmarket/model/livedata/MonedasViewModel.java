@@ -2,13 +2,11 @@ package abraham.alvarezcruz.openmarket.model.livedata;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.airbnb.lottie.L;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
@@ -79,8 +77,6 @@ public class MonedasViewModel extends AndroidViewModel {
     @SuppressLint("CheckResult")
     public void recargarListadoMonedas(){
 
-        Log.e(TAG_NAME, "Vamos a realizar una nueva petición!!");
-
         /*
             Obtenemos la lista de monedas de internet y las seteamos a #listadoMonedas MEDIANTE "setValue()"
             De esta forma evitamos que a los "observadores" se les avise de la actualización de la lista
@@ -89,7 +85,6 @@ public class MonedasViewModel extends AndroidViewModel {
         maybeListaMonedas = maybeListaMonedas
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(listaDeMonedas -> {
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas");
 
                     listadoMonedas.setValue(listaDeMonedas);
                     //listadoMonedas.postValue(listaDeMonedas);
@@ -104,8 +99,6 @@ public class MonedasViewModel extends AndroidViewModel {
         maybeListaIdsMonedasFavoritas = maybeListaIdsMonedasFavoritas
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess((listaIdsMonedasFavs) -> {
-
-                    Log.e(TAG_NAME, "Establecemos la nueva lista de monedas favoritas");
 
                     listadoIdsMonedasFavoritas.setValue(new ArrayList<>(listaIdsMonedasFavs));
                     //listadoIdsMonedasFavoritas.postValue(new ArrayList<>(idsTodasMonedasFavoritas));
@@ -126,8 +119,6 @@ public class MonedasViewModel extends AndroidViewModel {
         Maybe.merge(maybeListaIdsMonedasFavoritas, maybeListaMonedas)
                 .doAfterTerminate(() -> {
 
-                    Log.e(TAG_NAME, "Ya se terminó");
-
                     HashMap<String, Moneda> idMonedaConSuObjeto = Observable.just(listadoMonedas.getValue())
                             .flatMap(listaMonedas -> Observable.fromIterable(listaMonedas))
                             .reduce(new HashMap<String, Moneda>(), (map, moneda) -> {
@@ -135,8 +126,6 @@ public class MonedasViewModel extends AndroidViewModel {
                                 return map;
                             })
                             .blockingGet();
-
-                    Log.e(TAG_NAME, String.valueOf(listadoIdsMonedasFavoritas.getValue()));
 
                     // Recorremos los ids que hay en la lista de monedas favoritas
                     for (String idMoneda : listadoIdsMonedasFavoritas.getValue()){
@@ -163,7 +152,6 @@ public class MonedasViewModel extends AndroidViewModel {
 
                 // La moneda ya es favorita, no haremos nada
                 if (moneda.isFavorita()){
-                    Log.e(TAG_NAME, "La moneda ya es una favorita!!");
                     emitter.onSuccess(false);
                 }
 
@@ -317,8 +305,6 @@ public class MonedasViewModel extends AndroidViewModel {
                 break;
             }
         }
-
-        Log.e(TAG_NAME, "Vamos a eliminarlo de la lista. Pos: " + indx);
 
         if (indx > -1){
             tempListadoMonedasFavoritas.remove(indx);

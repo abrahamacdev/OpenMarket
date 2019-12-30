@@ -30,7 +30,7 @@ import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import io.reactivex.subjects.PublishSubject;
 
-public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoMonedasListener{
+public class FragmentoListaMonedasFavoritas extends Fragment{
 
     public static String TAG_NAME = FragmentoListaMonedasFavoritas.class.getSimpleName();
 
@@ -41,14 +41,14 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
     private Toolbar toolbar;
 
     private MonedasAdapter monedasAdapter;
-    private static PublishSubject<Moneda> monedaClickeadaSubject;
+    private PublishSubject<Moneda> monedaClickeadaSubject;
     private MutableLiveData<ArrayList<Moneda>> listaMonedasFavoritasMutable;
     private MonedasViewModel monedasViewModel;
 
-    public FragmentoListaMonedasFavoritas(){
-        if (monedaClickeadaSubject == null){
-            monedaClickeadaSubject = PublishSubject.create();
-        }
+    public FragmentoListaMonedasFavoritas(){ }
+
+    public FragmentoListaMonedasFavoritas(PublishSubject<Moneda> monedaClickeadaSubject){
+        this.monedaClickeadaSubject = monedaClickeadaSubject;
     }
 
 
@@ -56,8 +56,6 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_listado_favoritos, container, false);
-
-        Log.e(TAG_NAME,"Nuestro subject es: " + monedaClickeadaSubject);
 
         recyclerView = view.findViewById(R.id.recyclerListaMonedasFavoritas);
 
@@ -73,8 +71,8 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
     private void initRecyclerView(){
 
         monedasAdapter = new MonedasAdapter();
-
         monedasAdapter.setOnMonedaClickeadaSubject(monedaClickeadaSubject);
+
         recyclerView.addItemDecoration(new DividerItemDecoration(context,0));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.clearOnScrollListeners();
@@ -99,15 +97,13 @@ public class FragmentoListaMonedasFavoritas extends Fragment implements ListadoM
         }
     }
 
-    @Override
-    public PublishSubject<Moneda> getMonedaClickeadaSubject() {
-        return monedaClickeadaSubject;
+    public void setMonedaClickeadaSubject(PublishSubject<Moneda> monedaClickeadaSubject) {
+        this.monedaClickeadaSubject = monedaClickeadaSubject;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         monedasViewModel.recargarListadoMonedasFavoritas();
     }
 

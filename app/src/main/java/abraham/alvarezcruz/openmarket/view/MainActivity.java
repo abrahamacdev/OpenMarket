@@ -1,5 +1,6 @@
 package abraham.alvarezcruz.openmarket.view;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -8,30 +9,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import java.util.List;
+
 import abraham.alvarezcruz.openmarket.R;
 import abraham.alvarezcruz.openmarket.adapter.TabsAdapter;
 import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.utils.Utils;
-import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import okhttp3.internal.Util;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentListener{
 
     public static String TAG_NAME = MainActivity.class.getSimpleName();
 
     private View view;
+    private ViewPager viewPager;
+
+    private PublishSubject<Moneda> monedaClickeadaSubject;
+    private PublishSubject<View> fabExchangesClickeadoSubject;
+    private Fragment[] fragmentosListadosMonedas;
+    public TabsAdapter tabsAdapter;
+    public TabLayout tabLayout;
+
+    private Fragment fragmentoActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         view = findViewById(R.id.root);
+
+        // Atendemos los clicks en los fragments
+        escucharMonedaClickada();
+        escucharAperturaExchanges();
+
+        // Creamos los fragmentos que le pasaremos al TabAdapter
+        crearFragmentos();
 
         // Guardamos la versión del layout que se está utilizando
         Utils.setModo(String.valueOf(view.getTag()));
@@ -48,34 +62,25 @@ public class MainActivity extends AppCompatActivity {
 
         // Iniciamos las vistas
         initViews();
+
+        // Cargamos los tabs del viewpager
+        cargarTabs();
     }
 
     private void initViews(){
-
-        // Sobreescribiendo el método "onFragmentReady" conseguimos obtener un "subject" que será
-        // por el que escucharemos los clicks en una cierta moneda de la lista para mostrarla en detalle
-        TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, new FragmentViewPagerListener() {
-            @Override
-            public void onFragmentReady(ListadoMonedasListener listadoMonedasListener) {
-                // Cuando se clickee una moneda queremos recibir el evento para mostrar la moneda en detalle
-                escucharMonedaClickada(listadoMonedasListener.getMonedaClickeadaSubject());
-
-                // Si es el "FragmentoListaMonedas", también escucharemos el click del "FabAperturaExchange"
-                if (listadoMonedasListener instanceof FragmentoListaMonedas){
-                    FragmentoListaMonedas fragmentoListaMonedas = (FragmentoListaMonedas) listadoMonedasListener;
-                    escucharAperturaExchanges(fragmentoListaMonedas.getFabAperturaExchangesSubject());
-                }
-            }
-        });
-
         // TabLayout que mostrará los labels: "Todas" y "Favoritas"
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.label_viewpager_todas)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.label_viewpager_favoritas)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // ViewPager que se encargará de cargar el fragmento correspondiente
-        final ViewPager viewPager =(ViewPager)findViewById(R.id.viewPager);
+        viewPager =(ViewPager)findViewById(R.id.viewPager);
+    }
+
+    private void cargarTabs(){
+        tabsAdapter = new TabsAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragmentosListadosMonedas);
+
         viewPager.setAdapter(tabsAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -90,41 +95,44 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void crearFragmentos(){
 
+        fragmentosListadosMonedas = new Fragment[2];
+        fragmentosListadosMonedas[0] = new FragmentoListaMonedas(monedaClickeadaSubject, fabExchangesClickeadoSubject);
+        fragmentosListadosMonedas[1] = new FragmentoListaMonedasFavoritas(monedaClickeadaSubject);
+
+        if (fragmentoActivo == null){
+            fragmentoActivo = fragmentosListadosMonedas[0];
+        }
+    }
 
     /**
      * Cada vez que una moneda del {@link FragmentoListaMonedas} sea clickeada, recibiremos un evento
      * para ver en detalle más datos sobre la moneda
-     * @param monedaPublishSubject
      */
-    private void escucharMonedaClickada(PublishSubject<Moneda> monedaPublishSubject){
+    @SuppressLint("CheckResult")
+    private void escucharMonedaClickada(){
 
-        monedaPublishSubject.subscribe(moneda -> {
-
-            mostrarFragmentoDetalleMoneda(moneda);
-
-        }, error -> {
-            error.printStackTrace();
-        });
+        monedaClickeadaSubject = PublishSubject.create();
+        monedaClickeadaSubject.subscribe(this::mostrarFragmentoDetalleMoneda, Throwable::printStackTrace);
     }
 
     /**
      * Cada vez que se clickee el fab button de {@link FragmentoListaMonedas}, recibiremos un evento
      * para mostrar todos los exchanges disponibles
      */
-    private void escucharAperturaExchanges(Observable<View> fabExchangesObservable){
-        fabExchangesObservable.subscribe(
-                view -> {
+    @SuppressLint("CheckResult")
+    private void escucharAperturaExchanges(){
 
-                    mostrarFragmentoExchanges();
-                },
-                error -> {
-                    error.printStackTrace();
-                });
-
+        fabExchangesClickeadoSubject = PublishSubject.create();
+        fabExchangesClickeadoSubject.subscribe(
+                    view -> {
+                        mostrarFragmentoExchanges();
+                    },
+                    error -> {
+                        error.printStackTrace();
+                    });
     }
-
-
 
     private void mostrarFragmentoDetalleMoneda(Moneda moneda){
 
@@ -141,10 +149,62 @@ public class MainActivity extends AppCompatActivity {
 
     private void mostrarFragmentoExchanges(){
 
-        FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges();
+        FragmentoListaExchanges fragmentoListaExchanges = new FragmentoListaExchanges(Utils.getModo(), this);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contenedorFragmentos, fragmentoListaExchanges, FragmentoListaExchanges.TAG_NAME)
                 .addToBackStack(FragmentoListaExchanges.TAG_NAME)
                 .commit();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        //boolean estaApaisado = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        //setContentView(R.layout.activity_main);
+
+        // Atendemos los clicks en los fragments
+        escucharMonedaClickada();
+        escucharAperturaExchanges();
+
+        // Creamos los fragmentos que le pasaremos al TabAdapter
+        crearFragmentos();
+
+        // Guardamos la versión del layout que se está utilizando
+        Utils.setModo(String.valueOf(view.getTag()));
+
+        //initViews();
+
+        // Iniciamos las vistas
+        cargarTabs();
+
+        // En caso de que se esté mostrando la lista de exchanges o una moneda en detalle,
+        // evitamos que desaparezca de la pantalla
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+            Fragment currentFragment = fragmentManager.findFragmentByTag(fragmentTag);
+            Log.e(TAG_NAME, String.valueOf(currentFragment));
+
+            fragmentManager.popBackStackImmediate();
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedorFragmentos, currentFragment, FragmentoListaExchanges.TAG_NAME)
+                    .addToBackStack(FragmentoListaExchanges.TAG_NAME)
+                    .commit();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onFragmentClosed(Fragment fragment) {
+        // Manejamos nosotros mismos la salida
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().executePendingTransactions();
     }
 }

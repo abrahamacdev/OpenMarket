@@ -1,7 +1,9 @@
 package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,31 +33,26 @@ import abraham.alvarezcruz.openmarket.model.pojo.Moneda;
 import abraham.alvarezcruz.openmarket.model.livedata.MonedasViewModel;
 import io.reactivex.subjects.PublishSubject;
 
-public class FragmentoListaMonedas extends Fragment implements View.OnClickListener, ListadoMonedasListener {
+public class FragmentoListaMonedas extends Fragment implements View.OnClickListener {
 
     public static String TAG_NAME = FragmentoListaMonedas.class.getSimpleName();
 
     private View view;
     private AppCompatActivity mainActivity;
     private RecyclerView recyclerView;
-    private transient FloatingActionButton fabExchanges;
+    private FloatingActionButton fabExchanges;
 
     private MonedasAdapter monedasAdapter;
-    private static PublishSubject<Moneda> monedaClickeadaSubject;
-    private static PublishSubject<View> fabAperturaExchangesSubject;
     private MutableLiveData<ArrayList<Moneda>> listaMonedasMutable;
-    private MutableLiveData<ArrayList<String>> listaIdsMonedasFavoritas;
     private MonedasViewModel monedasViewModel;
+    private PublishSubject<Moneda> monedaClickeadaSubject;
+    private PublishSubject<View> fabExchangesClickeadoSubject;
 
-    public FragmentoListaMonedas(){
+    public FragmentoListaMonedas(){}
 
-        if (monedaClickeadaSubject == null){
-            monedaClickeadaSubject = PublishSubject.create();
-        }
-
-        if (fabAperturaExchangesSubject == null){
-            fabAperturaExchangesSubject = PublishSubject.create();
-        }
+    public FragmentoListaMonedas(PublishSubject<Moneda> monedaClickeadaSubject, PublishSubject<View> fabExchangesClickeadoSubject){
+        this.monedaClickeadaSubject = monedaClickeadaSubject;
+        this.fabExchangesClickeadoSubject = fabExchangesClickeadoSubject;
     }
 
 
@@ -86,8 +83,8 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
 
     private void initRecyclerView(){
 
-        monedasAdapter = new MonedasAdapter();
-        monedasAdapter.setOnMonedaClickeadaSubject(monedaClickeadaSubject);
+
+        monedasAdapter = new MonedasAdapter(monedaClickeadaSubject);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),0));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -131,30 +128,32 @@ public class FragmentoListaMonedas extends Fragment implements View.OnClickListe
         if (listaMonedasMutable.getValue().size() == 0){
             monedasViewModel.recargarListadoMonedas();
         }
-
-
-        listaIdsMonedasFavoritas = monedasViewModel.getListadoIdsMonedasFavoritas();
     }
 
-    public PublishSubject<Moneda> getMonedaClickeadaSubject() {
-        return monedaClickeadaSubject;
+    public void setMonedaClickeadaSubject(PublishSubject<Moneda> monedaClickeadaSubject) {
+        this.monedaClickeadaSubject = monedaClickeadaSubject;
+
+        if (monedasAdapter != null){
+            monedasAdapter.setOnMonedaClickeadaSubject(monedaClickeadaSubject);
+        }
     }
 
-    public PublishSubject<View> getFabAperturaExchangesSubject() {
-        return fabAperturaExchangesSubject;
+    public void setFabExchangesClickeadoSubject(PublishSubject<View> fabExchangesClickeadoSubject) {
+        this.fabExchangesClickeadoSubject = fabExchangesClickeadoSubject;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (fabExchangesClickeadoSubject != null){
+
+            fabExchangesClickeadoSubject.onNext(v);
+        }
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.mainActivity = (AppCompatActivity) context;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (fabAperturaExchangesSubject != null){
-            fabAperturaExchangesSubject.onNext(v);
-        }
     }
 }

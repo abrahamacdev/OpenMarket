@@ -1,6 +1,7 @@
 package abraham.alvarezcruz.openmarket.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,13 +41,19 @@ public class FragmentoListaExchanges extends Fragment {
     private ExchangesViewModel exchangesViewModel;
     private MutableLiveData<ArrayList<Exchange>> listaExchangesMutable;
     private String modo;
+    private FragmentListener fragmentListener;
 
     public FragmentoListaExchanges(){
         this(Utils.getModo());
     }
 
     public FragmentoListaExchanges(String modo){
+        this(modo, null);
+    }
+
+    public FragmentoListaExchanges(String modo, FragmentListener fragmentListener){
         this.modo = modo;
+        this.fragmentListener = fragmentListener;
     }
 
     @Nullable
@@ -75,14 +82,22 @@ public class FragmentoListaExchanges extends Fragment {
         parent.setSupportActionBar(toolbar);
         toolbar.setTitle("");
 
+        Fragment f = this;
+
         // Dependiendo del layout que se muestre añadiremos el botón de navegación o no
         if (modo != null && !modo.equals(getString(R.string.xlarge_port_tag))){
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Manejamos nosotros mismos la salida
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    if (fragmentListener != null){
+                        fragmentListener.onFragmentClosed(f);
+                    }
+
+                    else {
+                        // Manejamos nosotros mismos la salida
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
                 }
             });
         }
@@ -116,5 +131,15 @@ public class FragmentoListaExchanges extends Fragment {
         parent = (AppCompatActivity) context;
 
         super.onAttach(context);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 }
