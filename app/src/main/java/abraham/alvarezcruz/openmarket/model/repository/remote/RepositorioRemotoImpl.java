@@ -3,7 +3,6 @@ package abraham.alvarezcruz.openmarket.model.repository.remote;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,8 +50,6 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                         "&page=" + pagina + "&sparkline=false&price_change_percentage=1h%2C24h%2C7d";
                 String url = Constantes.COINGECKO_BASE_URL + Constantes.COINGECKO_MARKETS_ENDPOINT;
 
-                Log.e(TAG_NAME, url + params);
-
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url + params,
                         new Response.Listener<String>() {
@@ -98,8 +95,6 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
                 String url = Constantes.COINGECKO_BASE_URL + Constantes.COINGECKO_API_VERSION + Constantes.COINGECKO_COINS_PATH +
                         "/" + idCriptomoneda + Constantes.COINGECKO_MARKET_CHART_RANGE_ENDPOINT;
 
-                Log.e(TAG_NAME, "Petición a: " + url + params);
-
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url + params,
                         new Response.Listener<String>() {
@@ -133,8 +128,6 @@ public class RepositorioRemotoImpl implements IRepositorioRemoto {
             public void subscribe(MaybeEmitter<ArrayList<Exchange>> emitter) {
 
                 String url = Constantes.COINCAP_BASE_URL + Constantes.COINCAP_API_VERSION + Constantes.COINCAP_EXCHANGES_ENDPOINT;
-
-                Log.e(TAG_NAME, url);
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

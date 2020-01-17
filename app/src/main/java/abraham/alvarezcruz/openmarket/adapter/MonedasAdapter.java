@@ -190,12 +190,7 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ListadoM
 
         @Override
         public void onClick(View v) {
-
-            Log.e(TAG_NAME, "Se ha clickeado la moneda: " + moneda.getIdNombreMoneda());
-
             if (onMonedaClickeadaSubject != null){
-
-                Log.e(TAG_NAME, "Transmitimos el click a: " + onMonedaClickeadaSubject + " (Tiene observers?: " + onMonedaClickeadaSubject.hasObservers() + ")");
 
                 onMonedaClickeadaSubject.onNext(moneda);
             }

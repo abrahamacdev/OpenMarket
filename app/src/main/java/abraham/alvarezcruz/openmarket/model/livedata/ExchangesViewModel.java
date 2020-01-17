@@ -48,8 +48,6 @@ public class ExchangesViewModel extends AndroidViewModel {
     @SuppressLint("CheckResult")
     public void recargarListadoExchanges(){
 
-        Log.e(TAG_NAME, "Vamos a realizar una nueva petición!!");
-
         Maybe<ArrayList<Exchange>> maybeListaExchanges = repositorioRemoto_Impl.obtenerDatosGeneralesTodosExchanges();
         maybeListaExchanges
                 .subscribeOn(Schedulers.computation())

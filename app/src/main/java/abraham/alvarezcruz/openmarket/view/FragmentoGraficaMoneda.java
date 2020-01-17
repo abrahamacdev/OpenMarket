@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,8 +84,6 @@ public class FragmentoGraficaMoneda extends Fragment {
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        Log.e(TAG_NAME,"El tag seteado es: " + Utils.getModo());
-
         // Utilizaremos este view model para guardar la moneda en la base de datos
         monedasViewModel = ViewModelProviders.of(parent).get(MonedasViewModel.class);
 
@@ -143,7 +140,7 @@ public class FragmentoGraficaMoneda extends Fragment {
 
         grafica = view.findViewById(R.id.grafica);
         animacion = view.findViewById(R.id.animacion_bitcoin);
-        animacion.setMaxFrame(120);
+        animacion.setMaxFrame(120); // Paramos la animación en el frame 120
 
         imagenCriptomoneda = view.findViewById(R.id.imagenMonedaGraficaMoneda);
         Picasso.get()
@@ -262,7 +259,6 @@ public class FragmentoGraficaMoneda extends Fragment {
                     .subscribeOn(Schedulers.computation())
                     .subscribe(preciosMoneda -> {
                         moneda.setValoresUlt8D(preciosMoneda);
-                        Log.e(TAG_NAME, "Hemos recibido " + moneda.getValoresUlt8D().size() + " valores");
                         anadirDatosAGrafica();
                     });
         }

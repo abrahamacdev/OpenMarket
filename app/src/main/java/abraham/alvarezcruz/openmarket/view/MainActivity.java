@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements FragmentListener{
             FragmentManager fragmentManager = getSupportFragmentManager();
             String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
             Fragment currentFragment = fragmentManager.findFragmentByTag(fragmentTag);
-            Log.e(TAG_NAME, String.valueOf(currentFragment));
 
             fragmentManager.popBackStackImmediate();
 
